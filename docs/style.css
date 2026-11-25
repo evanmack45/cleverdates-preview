@@ -49,8 +49,8 @@ button:hover { background: #ff9274; }
 .c-date { font: 400 34px/1.1 var(--serif); }
 .c-rank { display: flex; align-items: baseline; gap: 10px; margin-top: 4px !important; }
 .c-hash { font: 700 18px/1 var(--sans); color: var(--ink2); align-self: flex-start; margin-top: 28px; }
-#c-rank { font: 400 clamp(108px, 30vw, 168px)/0.85 var(--serif); color: var(--coral-ink); letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
-.c-of { font: 700 20px/1 var(--sans); color: var(--ink); }
+#c-rank { font: 400 clamp(96px, 27vw, 168px)/0.85 var(--serif); color: var(--coral-ink); letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
+.c-of { font: 700 20px/1 var(--sans); color: var(--ink); white-space: nowrap; }
 .c-say { font-weight: 600; font-size: 19px; margin-top: 8px !important; }
 .c-meter { position: relative; height: 14px; margin: 34px 0 34px; border-radius: 3px;
   background: linear-gradient(90deg, #1d5c47 0 16.6%, #3f7a4f 0 33.3%, #7a9a55 0 50%, #c9a24a 0 66.6%, #ec8045 0 83.3%, #ff5e3a 0); }
@@ -123,3 +123,4 @@ html:not(.js) .share, html:not(.js) .billion { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+@media (max-width: 379px) { .c-facts dt { font-size: 13.5px; } .c-facts div { gap: 10px; } }
