@@ -144,7 +144,7 @@
     seg('…' + cur.pre, soft); seg(pad(cur.m) + pad(cur.d), coral); seg(cur.post + '…', soft);
     g.fillStyle = soft; g.font = '400 24px Schibsted, sans-serif';
     g.fillText(`US births ${meta.years}: SSA via FiveThirtyEight, CC BY 4.0. Averaged and ranked.`, P + 20, 1215);
-    g.fillText(location.host + location.pathname.replace(/index\.html$/, ''), P + 20, 1250);
+    g.fillText(location.host + location.pathname.replace(/index\.html$/, '') + `#d=${pad(cur.m)}-${pad(cur.d)}`, P + 20, 1250);
     return cv;
   };
   $('#save').addEventListener('click', async () => {
