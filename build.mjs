@@ -69,11 +69,15 @@ const html = `<!doctype html>
 <meta name="description" content="Type a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.">
 <meta property="og:title" content="How rare is your birthday?">
 <meta property="og:description" content="Your birthday's rank out of 366, and where it hides in pi.">
-<meta property="og:image" content="${SITE}og.png">
+<meta property="og:image" content="${SITE}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A slice of birthday cake with one lit candle inside a ring of small unlit candles, risograph style.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/gloock.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/schibsted.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="art/candles-800.webp" imagesrcset="art/candles-800.webp 800w, art/candles-1400.webp 1400w" imagesizes="(min-width: 900px) 600px, 100vw" fetchpriority="high">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230f3b2c'/%3E%3Crect x='9' y='9' width='5' height='5' fill='%23ff7a59'/%3E%3C/svg%3E">
 <script>document.documentElement.className='js'</script>
@@ -83,6 +87,7 @@ const html = `<!doctype html>
 <main>
 <section class="hero" aria-labelledby="h1">
  <div class="ask">
+  <figure class="hero-art"><img src="art/candles-800.webp" srcset="art/candles-800.webp 800w, art/candles-1400.webp 1400w" sizes="(min-width: 900px) 600px, 100vw" width="1400" height="547" fetchpriority="high" alt="Risograph print: a field of tiny unlit teal birthday candles with four glowing pink lit ones, one much brighter than the rest."></figure>
   <h1 id="h1">How rare is your birthday?</h1>
   <form class="pick" id="pick" role="search" action="#" novalidate>
    <label for="when">Month and day, no year</label>
@@ -108,19 +113,21 @@ const html = `<!doctype html>
  <div class="lists">
   <div><h3>Most common</h3><ol>${extremes.slice(0, 5).map((x, i) => listItem(x, i)).join('')}</ol></div>
   <div><h3>Rarest</h3><ol>${extremes.slice(-5).reverse().map((x, i) => listItem(x, i)).join('')}</ol></div>
+  <figure class="rare-art"><img src="art/candle-360.webp" srcset="art/candle-360.webp 360w, art/candle-640.webp 640w" sizes="(min-width: 900px) 240px, 60vw" width="640" height="853" loading="lazy" decoding="async" alt="Risograph print: one tall pink birthday candle burns alone on a wide teal plain under a pale sun."></figure>
  </div>
 </section>
 
 <section class="billion" aria-labelledby="b-h">
  <details id="bdetails">
-  <summary><span id="b-h">Show my billion-second day</span></summary>
-  <p>Add a birth year to see the day you turn one billion seconds old. The year stays on this page. It is not added to your link or your card.</p>
+  <summary><span id="b-h">Show my billion-second day and calendar twins</span></summary>
+  <p>Add a birth year to see the day you turn one billion seconds old, and the closest years before and after with the exact same calendar. The year stays on this page. It is not added to your link or your card.</p>
   <form id="bform" class="pick-row" action="#" novalidate>
    <label class="sr" for="byear">Birth year</label>
    <input id="byear" type="text" inputmode="numeric" maxlength="4" placeholder="1994" autocomplete="off">
    <button type="submit">Count</button>
   </form>
   <p id="bout" role="status"></p>
+  <p id="tout" role="status"></p>
  </details>
 </section>
 
@@ -130,6 +137,7 @@ const html = `<!doctype html>
  <p>February 29 is rare because it only happens every 4 years. It is ranked by its births per leap year, ${num(FEB29.avg)} on average, which is close to the ${num(meta.avgDay)} on an average day. Spread over the 4 years it takes to come around, that is ${num(FEB29.avg)} divided by 4, about ${num(Math.round(FEB29.avg / 4))} births a year, under a quarter of what an average date gets each year.</p>
  <p>Pi digits: the first ${num(meta.piDigits)} decimal digits, computed for this page with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked with a second method. We look for the month and day as four digits, so July 4 is 0704.</p>
  <p class="attr">${attribution}</p>
+ <p class="attr">Illustrations made with an AI image model (Nano Banana Pro). No real people are shown.</p>
 </section>
 </main>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
@@ -142,7 +150,9 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'fonts'), { recursive: true });
 mkdirSync(join(out, 'data'), { recursive: true });
 writeFileSync(join(out, 'index.html'), html);
-for (const f of ['style.css', 'app.js', 'og.png']) { copyFileSync(join(here, 'src', f), join(out, f)); }
+for (const f of ['style.css', 'app.js', 'og.jpg']) { copyFileSync(join(here, 'src', f), join(out, f)); }
+mkdirSync(join(out, 'art'), { recursive: true });
+for (const f of readdirSync(join(here, 'src/art'))) copyFileSync(join(here, 'src/art', f), join(out, 'art', f));
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
 copyFileSync(join(here, 'data/dates.json'), join(out, 'data/dates.json'));
 copyFileSync(join(here, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'), join(out, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'));

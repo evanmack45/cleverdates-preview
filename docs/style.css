@@ -30,7 +30,11 @@ a:hover { text-decoration-thickness: 2px; }
 .bar nav a { font-size: 16px; padding: 10px 0; }
 
 .hero { max-width: 1180px; margin: 0 auto; padding: 6px 20px 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; grid-template-areas: "ask" "card" "share"; }
-.ask { grid-area: ask; }
+.ask { grid-area: ask; display: flex; flex-direction: column; }
+.hero-art { margin: 0 -20px 16px; }
+.hero-art img { display: block; width: 100%; height: 150px; object-fit: cover; object-position: 60% 45%; }
+.rare-art { margin: 0; max-width: 240px; grid-column: 1 / -1; }
+.rare-art img { display: block; width: 100%; height: auto; border-radius: 14px; }
 h1 { font: 400 clamp(40px, 10.5vw, 96px)/0.98 var(--serif); letter-spacing: -0.015em; margin: 0 0 18px; max-width: 10ch; text-wrap: balance; }
 .pick label { display: block; font-weight: 600; font-size: 15px; margin-bottom: 6px; color: var(--cream2); }
 .pick-row { display: flex; gap: 8px; }
@@ -102,7 +106,8 @@ html:not(.js) .share, html:not(.js) .billion { display: none; }
 .billion summary { cursor: pointer; font: 400 24px/1.3 var(--serif); padding: 10px 0; }
 .billion p { max-width: 36em; color: var(--cream2); }
 .billion .pick-row { max-width: 360px; }
-#bout { color: var(--cream); font-weight: 600; min-height: 1.5em; }
+#bout, #tout { color: var(--cream); font-weight: 600; min-height: 1.5em; }
+#tout:empty { display: none; }
 .data p { max-width: 38em; color: var(--cream2); }
 .data a { display: inline-block; padding: 2px 0; color: var(--cream); }
 .attr { font-size: 15px; }
@@ -115,10 +120,13 @@ html:not(.js) .share, html:not(.js) .billion { display: none; }
   .bar { padding: 22px 32px; }
   .hero { padding: 16px 32px 56px; grid-template-columns: minmax(0, 1fr) 460px; column-gap: 64px; row-gap: 18px; grid-template-areas: "ask card" "share card" "x card"; align-items: start; }
   .ask { padding-top: 24px; }
+  .hero-art { order: 3; margin: 28px 0 0; }
+  .hero-art img { height: auto; aspect-ratio: 1400 / 547; border-radius: 18px; }
   .card { padding: 30px 32px 22px; }
   .map, .billion, .data { padding-left: 32px; padding-right: 32px; }
   .g-m { font-size: 13px; }
-  .lists { grid-template-columns: repeat(2, minmax(0, 280px)); }
+  .lists { grid-template-columns: repeat(2, minmax(0, 280px)) 240px; align-items: start; }
+  .rare-art { grid-column: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

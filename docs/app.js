@@ -114,6 +114,8 @@
     try { await navigator.clipboard.writeText(url); say('Link copied. It holds the month and day only.'); }
     catch { say('Copy this link: ' + url); }
   });
+  let candleP = null;
+  const candleArt = () => candleP || (candleP = new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = 'art/candle-360.webp'; }));
   const drawCard = async () => {
     await Promise.all([document.fonts.load('120px Gloock'), document.fonts.load('600 40px Schibsted'), document.fonts.load('400 30px Schibsted')]);
     const W = 1080, H = 1350, P = 84, k = 1;
@@ -128,6 +130,8 @@
     g.fillStyle = coral; g.font = '300px Gloock, serif';
     const rk = String(cur.rank); g.fillText(rk, P + 10, 560);
     const rw = g.measureText(rk).width;
+    const art = await candleArt();
+    if (art) { g.save(); g.beginPath(); g.roundRect(W - P - 20 - 200, 300, 200, 267, 18); g.clip(); g.drawImage(art, W - P - 20 - 200, 300, 200, 267); g.restore(); }
     g.fillStyle = ink; g.font = '600 44px Schibsted, sans-serif'; g.fillText('of 366', P + 30 + rw, 560);
     g.font = '500 44px Schibsted, sans-serif'; g.fillText(sayFor(cur), P + 20, 650);
     // meter
@@ -175,6 +179,7 @@
   const bout = $('#bout');
   $('#bform').addEventListener('submit', (e) => {
     e.preventDefault();
+    tout.textContent = '';
     const raw = $('#byear').value.trim();
     const now = new Date();
     if (!/^\d{4}$/.test(raw)) { bout.textContent = 'Type a four-digit year, like 1994.'; return; }
@@ -186,7 +191,23 @@
     const at = new Date(birth.getTime() + 1e9 * 1000);
     const when = at.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     bout.textContent = at > now ? `You turn one billion seconds old on ${when}, give or take a day for the hour you were born.` : `You turned one billion seconds old on ${when}, give or take a day for the hour you were born.`;
+    const [prev, next] = twins(y);
+    tout.textContent = `Calendar twins: ${prev} and ${next} have the same calendar as ${y}. Every date lands on the same weekday${leapY(y) ? ', Feb 29 included' : ''}.`;
   });
+  $('#byear').addEventListener('input', () => { tout.textContent = ''; });
+
+  // ---------- calendar twins (Foil's C5 fold-in): same Jan 1 weekday and same leap status ----------
+  const tout = $('#tout');
+  const leapY = (y) => y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
+  const jan1 = (y) => new Date(Date.UTC(y, 0, 1)).getUTCDay();
+  const same = (a, b) => jan1(a) === jan1(b) && leapY(a) === leapY(b);
+  function twins(y) {
+    let p = y - 1, n = y + 1;
+    while (!same(p, y)) p--;
+    while (!same(n, y)) n++;
+    return [p, n];
+  }
+  window.__twins = twins;
 
   load();
 })();
