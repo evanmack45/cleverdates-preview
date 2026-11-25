@@ -106,11 +106,18 @@
   addEventListener('hashchange', load);
 
   // ---------- share ----------
+  // Switch to https://cleverdates.com/ at go-live.
+  const CANONICAL = 'https://evanmack45.github.io/cleverdates-preview/';
+  const isLocalPage = () => location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const publicPage = () => (isLocalPage() ? CANONICAL : `${location.origin}${location.pathname}`).replace(/index\.html$/, '').replace(/\/?$/, '/');
+  const publicLink = (hash) => `${publicPage()}${hash.startsWith('#') ? hash : '#' + hash}`;
+  const publicFooter = (hash) => publicLink(hash).replace(/^https?:\/\//, '');
   const msg = $('#share-msg');
   const say = (s) => { msg.textContent = s; clearTimeout(say.t); say.t = setTimeout(() => (msg.textContent = ''), 4500); };
   $('#copy').addEventListener('click', async () => {
-    const url = `${location.origin}${location.pathname}#d=${pad(cur.m)}-${pad(cur.d)}`;
-    history.replaceState(null, '', url);
+    const hash = `#d=${pad(cur.m)}-${pad(cur.d)}`;
+    const url = publicLink(hash);
+    history.replaceState(null, '', hash);
     try { await navigator.clipboard.writeText(url); say('Link copied. It holds the month and day only.'); }
     catch { say('Copy this link: ' + url); }
   });
@@ -159,7 +166,7 @@
     seg('…' + cur.pre, soft); seg(pad(cur.m) + pad(cur.d), coral); seg(cur.post + '…', soft);
     g.fillStyle = soft; g.font = '400 24px Schibsted, sans-serif';
     g.fillText(`US births ${meta.years}: SSA via FiveThirtyEight, CC BY 4.0. Averaged and ranked.`, P + 20, 1215);
-    g.fillText(location.host + location.pathname.replace(/index\.html$/, '') + `#d=${pad(cur.m)}-${pad(cur.d)}`, P + 20, 1250);
+    g.fillText(publicFooter(`#d=${pad(cur.m)}-${pad(cur.d)}`), P + 20, 1250);
     return cv;
   };
   $('#save').addEventListener('click', async () => {
