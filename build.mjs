@@ -95,7 +95,7 @@ const html = `<!doctype html>
    <p class="help" id="when-help" role="status">Try 7/4, Dec 25 or 29 Feb. It stays in your browser.</p>
   </form>
  </div>
- <article class="card" id="card" aria-live="polite" aria-labelledby="c-date">${cardHTML(EX)}
+ <article class="card" id="card" aria-live="polite" aria-labelledby="c-date"><img class="c-band" src="art/result-band-410.webp" srcset="art/result-band-410.webp 410w, art/result-band-819.webp 819w" sizes="(min-width: 900px) 520px, 100vw" width="819" height="230" alt="" decoding="async">${cardHTML(EX)}
   <p class="c-src">US births ${meta.years}, SSA via FiveThirtyEight, CC BY 4.0</p>
  </article>
  <div class="share">

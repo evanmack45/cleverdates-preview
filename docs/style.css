@@ -48,6 +48,7 @@ button:hover { background: #ff9274; }
 /* ---------- rank card ---------- */
 .card { grid-area: card; background: var(--paper); color: var(--ink); border-radius: 22px; padding: 22px 22px 18px; min-width: 0; position: relative; box-shadow: 0 24px 40px -24px rgba(0, 0, 0, .6); }
 .card p { margin: 0; }
+.c-band { display: block; width: calc(100% + 44px); max-width: none; height: auto; aspect-ratio: 819 / 230; margin: -22px -22px 14px; border-radius: 22px 22px 0 0; border-bottom: 3px solid var(--ink); object-fit: cover; }
 .card.flip { animation: flip .5s cubic-bezier(.2, .8, .2, 1); }
 @keyframes flip { from { transform: translateY(10px) rotate(-0.6deg); } to { transform: none; } }
 .c-date { font: 400 34px/1.1 var(--serif); }
