@@ -36,6 +36,7 @@ const FEB29 = byKey(2, 29);
 const cardHTML = (x) => `
  <p class="c-date" id="c-date">${MONTHS[x.m - 1]} ${x.d}</p>
  <p class="c-rank"><span class="c-hash">No.</span><span id="c-rank">${x.rank}</span><span class="c-of">of 366</span></p>
+ <img class="c-crowd" id="c-crowd" src="art/crowd-480.webp" srcset="art/crowd-480.webp 480w, art/crowd-1024.webp 1024w" sizes="(min-width: 900px) 240px, 45vw" width="1024" height="1024" alt="A crowd of lit birthday candles packed side by side." loading="lazy" decoding="async" hidden>
  <p class="c-say" id="c-say">${x.rank > 183 ? `Rarer than ${num(Math.round(((x.rank - 1) / 365) * 100))}% of birthdays` : `More common than ${num(Math.round(((366 - x.rank) / 365) * 100))}% of birthdays`}</p>
  <div class="c-meter" aria-hidden="true"><span class="c-pin" id="c-pin" style="--at:${((x.rank - 1) / 365).toFixed(4)}"></span></div><div class="c-ends" aria-hidden="true"><span>most common</span><span>rarest</span></div>
  <dl class="c-facts">
@@ -111,9 +112,10 @@ const html = `<!doctype html>
  <div class="grid" id="grid" role="grid" aria-label="Calendar of all 366 birthdays shaded by how common they are. Use the text box above to pick a date.">${gridHTML}</div>
  <div class="key" aria-hidden="true"><span>more common</span>${[0, 1, 2, 3, 4, 5].map((i) => `<i class="g-c s${i}"></i>`).join('')}<span>rarer</span></div>
  <div class="lists">
-  <div><h3>Most common</h3><ol>${extremes.slice(0, 5).map((x, i) => listItem(x, i)).join('')}</ol></div>
-  <div><h3>Rarest</h3><ol>${extremes.slice(-5).reverse().map((x, i) => listItem(x, i)).join('')}</ol></div>
-  <figure class="rare-art"><img src="art/candle-360.webp" srcset="art/candle-360.webp 360w, art/candle-640.webp 640w" sizes="(min-width: 900px) 240px, 60vw" width="640" height="853" loading="lazy" decoding="async" alt="Risograph print: one tall pink birthday candle burns alone on a wide teal plain under a pale sun."></figure>
+  <div><h3>Most common</h3><ol>${extremes.slice(0, 5).map((x, i) => listItem(x, i)).join('')}</ol>
+   <figure class="crowd-art"><img src="art/crowd-480.webp" srcset="art/crowd-480.webp 480w, art/crowd-1024.webp 1024w" sizes="(min-width: 900px) 240px, 45vw" width="1024" height="1024" loading="lazy" decoding="async" alt="A crowd of lit birthday candles packed side by side."></figure></div>
+  <div><h3>Rarest</h3><ol>${extremes.slice(-5).reverse().map((x, i) => listItem(x, i)).join('')}</ol>
+   <figure class="rare-art"><img src="art/candle-360.webp" srcset="art/candle-360.webp 360w, art/candle-640.webp 640w" sizes="(min-width: 900px) 240px, 60vw" width="640" height="853" loading="lazy" decoding="async" alt="Risograph print: one tall pink birthday candle burns alone on a wide teal plain under a pale sun."></figure></div>
  </div>
 </section>
 

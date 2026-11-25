@@ -63,6 +63,7 @@
     $('#c-pipos').textContent = num(x.pi);
     $('#c-pre').textContent = x.pre; $('#c-post').textContent = x.post;
     const note = noteFor(x); $('#c-note').textContent = note; $('#c-note').hidden = !note;
+    const crowd = $('#c-crowd'); if (crowd) crowd.hidden = x.rank > 60;
     document.querySelectorAll('.g-c.on').forEach((c) => c.classList.remove('on'));
     document.querySelector(`.g-c[data-m="${x.m}"][data-d="${x.d}"]`)?.classList.add('on');
     if (!reduced) { card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); }
@@ -121,10 +122,11 @@
     try { await navigator.clipboard.writeText(url); say('Link copied. It holds the month and day only.'); }
     catch { say('Copy this link: ' + url); }
   });
-  let candleP = null, bandP = null;
+  let candleP = null, bandP = null, crowdP = null;
   const loadImg = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
   const candleArt = () => candleP || (candleP = loadImg('art/candle-360.webp'));
   const bandArt = () => bandP || (bandP = loadImg('art/result-band-819.webp'));
+  const crowdArt = () => crowdP || (crowdP = loadImg('art/crowd-1024.webp'));
   const drawCard = async () => {
     await Promise.all([document.fonts.load('120px Gloock'), document.fonts.load('600 40px Schibsted'), document.fonts.load('400 30px Schibsted')]);
     const W = 1080, H = 1350, P = 84, k = 1;
@@ -146,10 +148,13 @@
     g.fillStyle = coral; g.font = '300px Gloock, serif';
     const rk = String(cur.rank); g.fillText(rk, P + 10, 656);
     const rw = g.measureText(rk).width;
-    const art = await candleArt();
+    const common = cur.rank <= 60;
+    const art = common ? await crowdArt() : await candleArt();
     g.fillStyle = ink; g.font = '600 44px Schibsted, sans-serif'; g.fillText('of 366', P + 30 + rw, 656);
-    // the lonely candle shrinks rather than touch "of 366" on three-digit ranks
-    const ofEnd = P + 30 + rw + g.measureText('of 366').width, cw = Math.max(120, Math.min(200, W - P - 20 - (ofEnd + 18))), ch = Math.round((cw * 267) / 200), cx = W - P - 20 - cw, cy = 663 - ch;
+    // side art shrinks rather than touch "of 366" on three-digit ranks; crowd is square, the lonely candle is taller
+    const ofEnd = P + 30 + rw + g.measureText('of 366').width;
+    const maxW = Math.max(120, Math.min(common ? 240 : 200, W - P - 20 - (ofEnd + 18)));
+    const cw = maxW, ch = common ? maxW : Math.round((cw * 267) / 200), cx = W - P - 20 - cw, cy = 663 - ch;
     if (art) { g.save(); g.beginPath(); g.roundRect(cx, cy, cw, ch, 18); g.clip(); g.drawImage(art, cx, cy, cw, ch); g.restore(); }
     g.font = '500 44px Schibsted, sans-serif'; g.fillText(sayFor(cur), P + 20, 734);
     // meter
