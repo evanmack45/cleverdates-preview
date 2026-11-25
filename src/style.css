@@ -59,10 +59,10 @@ button:hover { background: #ff9274; }
 #c-rank { font: 400 clamp(96px, 27vw, 168px)/0.85 var(--serif); color: var(--coral-ink); letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
 .c-of { font: 700 20px/1 var(--sans); color: var(--ink); white-space: nowrap; }
 .c-say { font-weight: 600; font-size: 19px; margin-top: 8px !important; }
-.c-meter { position: relative; height: 14px; margin: 34px 0 34px; border-radius: 3px;
+.c-meter { clear: both; position: relative; height: 14px; margin: 34px 0 34px; border-radius: 3px;
   background: linear-gradient(90deg, #1d5c47 0 16.6%, #3f7a4f 0 33.3%, #7a9a55 0 50%, #c9a24a 0 66.6%, #ec8045 0 83.3%, #ff5e3a 0); }
 .c-pin { position: absolute; left: calc(9px + var(--at) * (100% - 18px)); top: -14px; width: 0; height: 0; border: 9px solid transparent; border-top: 12px solid var(--ink); transform: translateX(-50%); transition: left .5s cubic-bezier(.2, .8, .2, 1); }
-.c-ends { display: flex; justify-content: space-between; margin: -26px 0 26px; font-size: 13px; color: var(--ink2); }
+.c-ends { clear: both; display: flex; justify-content: space-between; margin: -26px 0 26px; font-size: 13px; color: var(--ink2); }
 .c-facts { margin: 0; display: grid; gap: 6px; }
 .c-facts div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 1px solid #ddd2bd; padding-bottom: 6px; }
 .c-facts div[hidden] { display: none; }
