@@ -32,6 +32,7 @@ const byKey = (m, d) => dates.find((x) => x.m === m && x.d === d);
 const shade = (rank) => Math.min(5, Math.floor(((rank - 1) / 366) * 6));
 
 const EX = byKey(7, 4);
+const FEB29 = byKey(2, 29);
 const cardHTML = (x) => `
  <p class="c-date" id="c-date">${MONTHS[x.m - 1]} ${x.d}</p>
  <p class="c-rank"><span class="c-hash">No.</span><span id="c-rank">${x.rank}</span><span class="c-of">of 366</span></p>
@@ -39,6 +40,7 @@ const cardHTML = (x) => `
  <div class="c-meter" aria-hidden="true"><span class="c-pin" id="c-pin" style="--at:${((x.rank - 1) / 365).toFixed(4)}"></span></div><div class="c-ends" aria-hidden="true"><span>most common</span><span>rarest</span></div>
  <dl class="c-facts">
   <div><dt>US births on an average ${MONTHS[x.m - 1].slice(0, 3)} ${x.d}</dt><dd id="c-avg">${num(x.avg)}</dd></div>
+  <div id="c-leaprow" hidden><dt>Per year, over 4 years</dt><dd id="c-leap"></dd></div>
   <div><dt>On an average day of the year</dt><dd>${num(meta.avgDay)}</dd></div>
  </dl>
  <div class="c-pi">
@@ -125,7 +127,7 @@ const html = `<!doctype html>
 <section class="data" id="data" aria-labelledby="data-h">
  <h2 id="data-h">About the data</h2>
  <p>The rank uses ${num(meta.days)} days of US births, ${meta.years}, ${num(meta.births)} babies in all. For each month and day we take the average number of births on that date, then rank the 366 dates from most common (no. 1) to rarest (no. 366). Holidays rank low because fewer births are scheduled on them.</p>
- <p>February 29 is ranked by its average day too. Counted over whole years it is the rarest by far, because it comes once every four years.</p>
+ <p>February 29 is rare because it only happens every 4 years. It is ranked by its births per leap year, ${num(FEB29.avg)} on average, which is close to the ${num(meta.avgDay)} on an average day. Spread over the 4 years it takes to come around, that is ${num(FEB29.avg)} divided by 4, about ${num(Math.round(FEB29.avg / 4))} births a year, under a quarter of what an average date gets each year.</p>
  <p>Pi digits: the first ${num(meta.piDigits)} decimal digits, computed for this page with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked with a second method. We look for the month and day as four digits, so July 4 is 0704.</p>
  <p class="attr">${attribution}</p>
 </section>

@@ -43,8 +43,10 @@
     : x.rank === 366 ? 'The rarest birthday of all'
     : x.rank > 183 ? `Rarer than ${Math.round(((x.rank - 1) / 365) * 100)}% of birthdays`
     : `More common than ${Math.round(((366 - x.rank) / 365) * 100)}% of birthdays`;
-  const noteFor = (x) => x.m === 2 && x.d === 29
-    ? 'February 29 comes once every four years. Counted over whole years, it is the rarest birthday of all: about 1 day in 1,461.'
+  const isLeap = (x) => x.m === 2 && x.d === 29;
+  const perYear = (x) => Math.round(x.avg / 4);
+  const noteFor = (x) => isLeap(x)
+    ? `Feb 29 is rare because it only happens every 4 years. In a leap year it gets close to a normal day's births. Over 4 years that is about ${num(perYear(x))} a year.`
     : x.rank > 356 ? 'Holidays rank low because fewer births are scheduled on them.' : '';
   const card = $('#card');
   const show = (x, { push = true, scroll = false } = {}) => {
@@ -55,7 +57,8 @@
     $('#c-say').textContent = sayFor(x);
     $('#c-pin').style.setProperty('--at', ((x.rank - 1) / 365).toFixed(4));
     $('#c-avg').textContent = num(x.avg);
-    $('#c-avg').previousElementSibling.textContent = `US births on an average ${MONTHS[x.m - 1].slice(0, 3)} ${x.d}`;
+    $('#c-avg').previousElementSibling.textContent = isLeap(x) ? 'Births on Feb 29, per leap year' : `US births on an average ${MONTHS[x.m - 1].slice(0, 3)} ${x.d}`;
+    $('#c-leaprow').hidden = !isLeap(x); $('#c-leap').textContent = isLeap(x) ? num(perYear(x)) : '';
     $('#c-mmdd').textContent = mm; $('#c-hit').textContent = mm;
     $('#c-pipos').textContent = num(x.pi);
     $('#c-pre').textContent = x.pre; $('#c-post').textContent = x.post;
@@ -133,9 +136,17 @@
     const px = mx + mw * ((cur.rank - 1) / 365);
     g.fillStyle = ink; g.beginPath(); g.moveTo(px, my - 6); g.lineTo(px - 14, my - 30); g.lineTo(px + 14, my - 30); g.fill();
     g.font = '400 28px Schibsted, sans-serif'; g.fillStyle = soft; g.fillText('most common', mx, my + 60); g.textAlign = 'right'; g.fillText('rarest', mx + mw, my + 60); g.textAlign = 'left';
-    g.fillStyle = ink; g.font = '400 36px Schibsted, sans-serif';
-    g.fillText(`${num(cur.avg)} US babies on an average ${MONTHS[cur.m - 1].slice(0, 3)} ${cur.d}`, P + 20, 860);
-    g.fillText(`${num(meta.avgDay)} on an average day`, P + 20, 910);
+    g.fillStyle = ink;
+    if (isLeap(cur)) {
+      g.font = '400 32px Schibsted, sans-serif';
+      g.fillText(`${num(cur.avg)} US babies on Feb 29, per leap year`, P + 20, 846);
+      g.fillText(`It only happens every 4 years, so about ${num(perYear(cur))} a year`, P + 20, 892);
+      g.fillText(`An average day gets ${num(meta.avgDay)}`, P + 20, 938);
+    } else {
+      g.font = '400 36px Schibsted, sans-serif';
+      g.fillText(`${num(cur.avg)} US babies on an average ${MONTHS[cur.m - 1].slice(0, 3)} ${cur.d}`, P + 20, 860);
+      g.fillText(`${num(meta.avgDay)} on an average day`, P + 20, 910);
+    }
     // pi
     g.fillStyle = ink; g.fillRect(P + 20, 970, W - 2 * (P + 20), 2);
     g.font = '600 36px Schibsted, sans-serif'; g.fillText(`In pi, ${pad(cur.m)}${pad(cur.d)} first shows up at digit ${num(cur.pi)}`, P + 20, 1040);
