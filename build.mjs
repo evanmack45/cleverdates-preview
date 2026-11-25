@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, 'docs');
 const { meta, dates } = JSON.parse(readFileSync(join(here, 'data/dates.json'), 'utf8'));
-const SITE = 'https://evanmack45.github.io/cleverdates-preview/';
+const SITE = 'https://cleverdates.com/';
 const AFTERNIC = 'https://www.afternic.com/domain/cleverdates.com';
 const SOURCE = 'https://github.com/fivethirtyeight/data/tree/master/births';
 const LICENSE = 'https://creativecommons.org/licenses/by/4.0/';
@@ -65,7 +65,8 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="${SITE}">
+<meta property="og:url" content="${SITE}">
 <title>How rare is your birthday? | Clever Dates</title>
 <meta name="description" content="Type a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.">
 <meta property="og:title" content="How rare is your birthday?">
@@ -182,6 +183,8 @@ for (const f of readdirSync(join(here, 'src/art'))) copyFileSync(join(here, 'src
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
 copyFileSync(join(here, 'data/dates.json'), join(out, 'data/dates.json'));
 copyFileSync(join(here, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'), join(out, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'));
-writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'CNAME'), 'cleverdates.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);
