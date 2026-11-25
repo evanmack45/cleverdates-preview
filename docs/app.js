@@ -41,8 +41,8 @@
   // ---------- card ----------
   const sayFor = (x) => x.rank === 1 ? 'The most common birthday of all'
     : x.rank === 366 ? 'The rarest birthday of all'
-    : x.rank > 183 ? `Rarer than ${Math.round(((x.rank - 1) / 365) * 100)}% of birthdays`
-    : `More common than ${Math.round(((366 - x.rank) / 365) * 100)}% of birthdays`;
+    : x.rank > 183 ? `Rarer than ${Math.min(99, Math.round(((x.rank - 1) / 365) * 100))}% of birthdays`
+    : `More common than ${Math.min(99, Math.round(((366 - x.rank) / 365) * 100))}% of birthdays`;
   const isLeap = (x) => x.m === 2 && x.d === 29;
   const perYear = (x) => Math.round(x.avg / 4);
   const noteFor = (x) => isLeap(x)
@@ -227,7 +227,7 @@
   const currentHash = () => `#d=${key(cur)}` + (friend ? `&vs=${key(friend)}` : locked ? '&vs=' : '');
   const nameOf = (x) => `${MONTHS[x.m - 1]} ${x.d}`;
   const shortSay = (x) => x.rank === 1 ? 'Most common of all' : x.rank === 366 ? 'Rarest of all'
-    : x.rank > 183 ? `Rarer than ${Math.round(((x.rank - 1) / 365) * 100)}%` : `More common than ${Math.round(((366 - x.rank) / 365) * 100)}%`;
+    : x.rank > 183 ? `Rarer than ${Math.min(99, Math.round(((x.rank - 1) / 365) * 100))}%` : `More common than ${Math.min(99, Math.round(((366 - x.rank) / 365) * 100))}%`;
   const gapText = () => {
     if (friend.rank === cur.rank) return 'Same birthday, same rank.';
     const [hi, lo] = friend.rank > cur.rank ? [friend, cur] : [cur, friend];
