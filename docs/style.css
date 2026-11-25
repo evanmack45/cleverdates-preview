@@ -165,3 +165,4 @@ html:not(.js) .vs { display: none; }
 #when[readonly] { background: var(--cream2); border-color: var(--cream2); }
 @media (max-width: 899px) { .hero.locked { grid-template-areas: "ask" "vs" "card" "share"; } .hero.locked .vs { border-top: 0; margin-top: 0; padding-top: 0; } }
 .pick-row input::placeholder { color: #5b5b5b; opacity: 1; }
+@media (min-width: 900px) { .hero.locked { grid-template-areas: "ask card" "vs card" "share card"; } .hero.locked .hero-art { display: none; } .hero.locked .vs { border-top: 0; margin-top: 0; padding-top: 0; } }
