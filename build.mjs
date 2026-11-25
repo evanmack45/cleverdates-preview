@@ -104,6 +104,30 @@ const html = `<!doctype html>
   <button type="button" id="copy">Copy link</button>
   <p id="share-msg" role="status"></p>
  </div>
+ <section class="vs" id="vs" aria-labelledby="vs-h">
+  <h2 id="vs-h">You vs a friend</h2>
+  <p class="vs-dek" id="vs-dek">Type a friend's month and day to see whose birthday is rarer, or send them a challenge link.</p>
+  <form class="pick" id="vsform" action="#" novalidate>
+   <label for="vswhen" id="vs-label">Their month and day, no year</label>
+   <div class="pick-row"><input id="vswhen" name="vswhen" type="text" autocomplete="off" spellcheck="false" maxlength="24" placeholder="Dec 25" aria-describedby="vs-help"><button type="submit">Compare</button></div>
+   <p class="help" id="vs-help" role="status">Try 12/25 or Sept 12. Nothing is saved.</p>
+  </form>
+  <div class="vs-out" id="vs-out" aria-live="polite" hidden>
+   <div class="vs-tiles">
+    <div class="vs-tile"><p class="vs-who"><i class="k a" aria-hidden="true"></i><span id="vs-a-who">Your date</span></p><p class="vs-d" id="vs-a-d"></p><p class="vs-r"><b id="vs-a-r"></b><span>of 366</span></p><p class="vs-s" id="vs-a-s"></p></div>
+    <div class="vs-tile"><p class="vs-who"><i class="k b" aria-hidden="true"></i><span id="vs-b-who">Friend</span></p><p class="vs-d" id="vs-b-d"></p><p class="vs-r"><b id="vs-b-r"></b><span>of 366</span></p><p class="vs-s" id="vs-b-s"></p></div>
+   </div>
+   <div class="c-meter vs-meter" aria-hidden="true"><span class="c-pin" id="vs-pin-a"></span><span class="c-pin b" id="vs-pin-b"></span></div>
+   <p class="vs-gap" id="vs-gap"></p>
+  </div>
+  <div class="vs-btns">
+   <button type="button" id="vs-save" hidden>Save two-date card</button>
+   <button type="button" id="vs-copy" hidden>Copy comparison link</button>
+   <button type="button" id="vs-chal">Copy challenge link</button>
+   <button type="button" id="vs-unlock" hidden>Check my own date instead</button>
+   <p id="vs-msg" role="status"></p>
+  </div>
+ </section>
 </section>
 
 <section class="map" aria-labelledby="map-h">

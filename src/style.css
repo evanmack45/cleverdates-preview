@@ -29,7 +29,7 @@ a:hover { text-decoration-thickness: 2px; }
 .mark { font: 400 22px/1 var(--serif); text-decoration: none; padding: 6px 0; }
 .bar nav a { font-size: 16px; padding: 10px 0; }
 
-.hero { max-width: 1180px; margin: 0 auto; padding: 6px 20px 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; grid-template-areas: "ask" "card" "share"; }
+.hero { max-width: 1180px; margin: 0 auto; padding: 6px 20px 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; grid-template-areas: "ask" "card" "share" "vs"; }
 .ask { grid-area: ask; display: flex; flex-direction: column; }
 .hero-art { margin: 0 -20px 16px; }
 .hero-art img { display: block; width: 100%; height: 150px; object-fit: cover; object-position: 60% 45%; }
@@ -121,7 +121,7 @@ html:not(.js) .share, html:not(.js) .billion { display: none; }
 @media (min-width: 900px) {
   body { font-size: 18px; }
   .bar { padding: 22px 32px; }
-  .hero { padding: 16px 32px 56px; grid-template-columns: minmax(0, 1fr) 460px; column-gap: 64px; row-gap: 18px; grid-template-areas: "ask card" "share card" "x card"; align-items: start; }
+  .hero { padding: 16px 32px 56px; grid-template-columns: minmax(0, 1fr) 460px; column-gap: 64px; row-gap: 18px; grid-template-areas: "ask card" "share card" "vs card"; align-items: start; }
   .ask { padding-top: 24px; }
   .hero-art { order: 3; margin: 28px 0 0; }
   .hero-art img { height: auto; aspect-ratio: 1400 / 547; border-radius: 18px; }
@@ -135,3 +135,32 @@ html:not(.js) .share, html:not(.js) .billion { display: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (max-width: 379px) { .c-facts dt { font-size: 13.5px; } .c-facts div { gap: 10px; } }
+
+/* ---------- you vs a friend ---------- */
+.vs { grid-area: vs; min-width: 0; margin-top: 8px; padding-top: 18px; border-top: 2px solid var(--green2); }
+.vs h2 { font: 400 clamp(28px, 7vw, 36px)/1.05 var(--serif); margin: 0 0 6px; }
+.vs-dek { margin: 0 0 12px; font-size: 16px; color: var(--cream2); }
+.vs-out { margin-top: 16px; background: var(--paper); color: var(--ink); border-radius: 18px; padding: 18px 18px 14px; }
+.vs-out[hidden] { display: none; }
+.vs-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.vs-tile p { margin: 0; }
+.vs-who { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--ink2); }
+.vs-who .k { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--ink); flex: none; }
+.vs-who .k.b { background: var(--coral-ink); }
+.vs-d { font: 400 clamp(20px, 5.4vw, 26px)/1.1 var(--serif); margin-top: 4px !important; }
+.vs-r { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; margin-top: 2px !important; }
+.vs-r b { font: 400 clamp(54px, 15vw, 84px)/0.9 var(--serif); color: var(--coral-ink); letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
+.vs-r span { font: 700 14px/1 var(--sans); }
+.vs-s { font-size: 14px; font-weight: 600; margin-top: 6px !important; }
+.vs-meter { margin: 30px 2px 12px; }
+.c-pin.b { top: auto; bottom: -14px; border-top-color: transparent; border-bottom: 12px solid var(--coral-ink); }
+.vs-gap { margin: 0; font-weight: 700; font-size: 17px; }
+.vs-btns { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.vs-btns button + button { background: transparent; color: var(--cream); box-shadow: inset 0 0 0 2px var(--cream); }
+.vs-btns button + button:hover { background: var(--green2); }
+.vs-btns button[hidden] { display: none; }
+.vs-btns #vs-save[hidden] + #vs-copy:not([hidden]) { background: var(--coral); color: var(--ink); box-shadow: none; }
+#vs-msg { flex-basis: 100%; margin: 0; font-size: 15px; min-height: 1.5em; overflow-wrap: anywhere; }
+html:not(.js) .vs { display: none; }
+#when[readonly] { background: var(--cream2); border-color: var(--cream2); }
+@media (max-width: 899px) { .hero.locked { grid-template-areas: "ask" "vs" "card" "share"; } .hero.locked .vs { border-top: 0; margin-top: 0; padding-top: 0; } }

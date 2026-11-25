@@ -67,7 +67,8 @@
     document.querySelectorAll('.g-c.on').forEach((c) => c.classList.remove('on'));
     document.querySelector(`.g-c[data-m="${x.m}"][data-d="${x.d}"]`)?.classList.add('on');
     if (!reduced) { card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip'); }
-    if (push) history.replaceState(null, '', `#d=${pad(x.m)}-${pad(x.d)}`);
+    if (push) history.replaceState(null, '', currentHash());
+    renderVs();
     if (scroll) { const r = card.getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * 0.6) card.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }); }
     bout.textContent = '';
   };
@@ -87,22 +88,38 @@
     const c = e.target.closest('.g-c[data-m]');
     if (!c) return;
     const x = find(Number(c.dataset.m), Number(c.dataset.d));
+    if (locked) { setFriend(x); return; }
     input.value = `${MONTHS[x.m - 1]} ${x.d}`;
     show(x, { scroll: true });
   });
   document.querySelector('.lists').addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#d="]'); if (!a) return;
-    e.preventDefault(); const r = fromHash(a.getAttribute('href'));
+    e.preventDefault(); const r = fromHash(a.getAttribute('href'))?.a;
+    if (r && locked) { setFriend(r); return; }
     if (r) { input.value = `${MONTHS[r.m - 1]} ${r.d}`; show(r, { scroll: true }); }
   });
 
   // ---------- hash ----------
-  const fromHash = (h) => { const m = /^#d=(\d{2})-(\d{2})$/.exec(h); if (!m) return null; const mo = Number(m[1]), d = Number(m[2]); return mo >= 1 && mo <= 12 && d >= 1 && d <= DIM[mo - 1] ? find(mo, d) : null; };
+  const key = (x) => `${pad(x.m)}-${pad(x.d)}`;
+  const dateOf = (t) => { const m = /^(\d{2})-(\d{2})$/.exec(t); if (!m) return null; const mo = Number(m[1]), d = Number(m[2]); return mo >= 1 && mo <= 12 && d >= 1 && d <= DIM[mo - 1] ? find(mo, d) : null; };
+  // #d=MM-DD (one date), #d=MM-DD&vs= (challenge: sender's date, friend's still empty), #d=MM-DD&vs=MM-DD (both).
+  // Returns { a, vs } or null. vs is undefined (absent), '' (empty), a date row, or null (present but not a real date).
+  const fromHash = (h) => {
+    const m = /^#d=(\d{2}-\d{2})(?:&vs=([^&]{0,24}))?$/.exec(h);
+    const a = m && dateOf(m[1]);
+    if (!a) return null;
+    return { a, vs: m[2] === undefined ? undefined : m[2] === '' ? '' : dateOf(m[2]) };
+  };
   const load = () => {
     if (!location.hash) return;
-    const x = fromHash(location.hash);
-    if (x) { input.value = `${MONTHS[x.m - 1]} ${x.d}`; show(x, { push: false }); }
-    else { help.textContent = 'That link has no valid date. Type one above.'; help.classList.add('bad'); }
+    const h = fromHash(location.hash);
+    if (!h) { help.textContent = 'That link has no valid date. Type one above.'; help.classList.add('bad'); return; }
+    locked = h.vs !== undefined;
+    friend = h.vs && h.vs !== null ? h.vs : null;
+    input.value = `${MONTHS[h.a.m - 1]} ${h.a.d}`;
+    show(h.a, { push: false });
+    vsIn.value = friend ? `${MONTHS[friend.m - 1]} ${friend.d}` : '';
+    if (h.vs === null) setVsHelp('The friend date in that link is not a real date. Type yours.', true);
   };
   addEventListener('hashchange', load);
 
@@ -114,11 +131,12 @@
   const publicLink = (hash) => `${publicPage()}${hash.startsWith('#') ? hash : '#' + hash}`;
   const publicFooter = (hash) => publicLink(hash).replace(/^https?:\/\//, '');
   const msg = $('#share-msg');
-  const say = (s) => { msg.textContent = s; clearTimeout(say.t); say.t = setTimeout(() => (msg.textContent = ''), 4500); };
+  const sayIn = (el, s) => { el.textContent = s; clearTimeout(el._t); el._t = setTimeout(() => (el.textContent = ''), 4500); };
+  const say = (s) => sayIn(msg, s);
   $('#copy').addEventListener('click', async () => {
-    const hash = `#d=${pad(cur.m)}-${pad(cur.d)}`;
+    const hash = `#d=${key(cur)}`;
     const url = publicLink(hash);
-    history.replaceState(null, '', hash);
+    history.replaceState(null, '', currentHash());
     try { await navigator.clipboard.writeText(url); say('Link copied. It holds the month and day only.'); }
     catch { say('Copy this link: ' + url); }
   });
@@ -127,21 +145,24 @@
   const candleArt = () => candleP || (candleP = loadImg('art/candle-360.webp'));
   const bandArt = () => bandP || (bandP = loadImg('art/result-band-819.webp'));
   const crowdArt = () => crowdP || (crowdP = loadImg('art/crowd-1024.webp'));
+  // green ground, cream paper and Dash's candle-field band across the top (type stays on plain cream below it)
+  const frame = async (g, W, H) => {
+    g.fillStyle = '#0f3b2c'; g.fillRect(0, 0, W, H);
+    g.fillStyle = '#f6efe0'; g.beginPath(); g.roundRect(48, 48, W - 96, H - 96, 36); g.fill();
+    const band = await bandArt();
+    g.save(); g.beginPath(); g.roundRect(48, 48, W - 96, H - 96, 36); g.clip();
+    if (band) g.drawImage(band, 0, 0, band.width, Math.round(band.width * 198 / 984), 48, 48, W - 96, 198);
+    else { g.fillStyle = '#e3d9bf'; g.fillRect(48, 48, W - 96, 198); }
+    g.fillStyle = '#0f3b2c'; g.fillRect(48, 246, W - 96, 3);
+    g.restore();
+  };
   const drawCard = async () => {
     await Promise.all([document.fonts.load('120px Gloock'), document.fonts.load('600 40px Schibsted'), document.fonts.load('400 30px Schibsted')]);
     const W = 1080, H = 1350, P = 84, k = 1;
     const cv = document.createElement('canvas'); cv.width = W * k; cv.height = H * k;
     const g = cv.getContext('2d');
     const ink = '#0f3b2c', coral = '#e0502c', paper = '#f6efe0', soft = '#46665a';
-    g.fillStyle = '#0f3b2c'; g.fillRect(0, 0, W, H);
-    g.fillStyle = paper; g.beginPath(); g.roundRect(48, 48, W - 96, H - 96, 36); g.fill();
-    // Dash's candle field, a header band across the top of the paper (type stays on plain cream below it)
-    const band = await bandArt();
-    g.save(); g.beginPath(); g.roundRect(48, 48, W - 96, H - 96, 36); g.clip();
-    if (band) g.drawImage(band, 0, 0, band.width, Math.round(band.width * 198 / 984), 48, 48, W - 96, 198);
-    else { g.fillStyle = '#e3d9bf'; g.fillRect(48, 48, W - 96, 198); }
-    g.fillStyle = ink; g.fillRect(48, 246, W - 96, 3);
-    g.restore();
+    await frame(g, W, H);
     g.fillStyle = ink; g.textBaseline = 'alphabetic';
     g.font = '600 34px Schibsted, sans-serif'; g.fillText('How rare is your birthday?', P + 20, 306);
     g.font = '96px Gloock, serif'; g.fillText(`${MONTHS[cur.m - 1]} ${cur.d}`, P + 20, 406);
@@ -185,18 +206,127 @@
     g.fillText(publicFooter(`#d=${pad(cur.m)}-${pad(cur.d)}`), P + 20, 1262);
     return cv;
   };
-  $('#save').addEventListener('click', async () => {
-    const cv = await drawCard();
+  const deliver = async (cv, name, tell) => {
     const blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
-    const name = `birthday-${pad(cur.m)}-${pad(cur.d)}.png`;
     const file = new File([blob], name, { type: 'image/png' });
     if (matchMedia('(pointer: coarse)').matches && navigator.canShare?.({ files: [file] })) {
       try { await navigator.share({ files: [file] }); return; } catch { /* fall back to download */ }
     }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
     document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    say('Card saved.');
+    tell('Card saved.');
+  };
+  $('#save').addEventListener('click', async () => deliver(await drawCard(), `birthday-${pad(cur.m)}-${pad(cur.d)}.png`, say));
+
+  // ---------- you vs a friend ----------
+  // State is two month-day pairs in the URL hash. No names, no years, nothing stored or sent.
+  // locked: the page was opened from a link that carries "&vs=", so the sender's date can't be edited here.
+  let friend = null, locked = false;
+  const vsIn = $('#vswhen'), vsHelp = $('#vs-help'), vsOut = $('#vs-out'), hero = $('.hero');
+  const VS_HELP = vsHelp.textContent;
+  const currentHash = () => `#d=${key(cur)}` + (friend ? `&vs=${key(friend)}` : locked ? '&vs=' : '');
+  const nameOf = (x) => `${MONTHS[x.m - 1]} ${x.d}`;
+  const shortSay = (x) => x.rank === 1 ? 'Most common of all' : x.rank === 366 ? 'Rarest of all'
+    : x.rank > 183 ? `Rarer than ${Math.round(((x.rank - 1) / 365) * 100)}%` : `More common than ${Math.round(((366 - x.rank) / 365) * 100)}%`;
+  const gapText = () => {
+    if (friend.rank === cur.rank) return 'Same birthday, same rank.';
+    const [hi, lo] = friend.rank > cur.rank ? [friend, cur] : [cur, friend];
+    return `${nameOf(hi)} is the rarer one, ${hi.rank - lo.rank} place${hi.rank - lo.rank === 1 ? '' : 's'} apart.`;
+  };
+  const setVsHelp = (t, bad) => { vsHelp.textContent = t; vsHelp.classList.toggle('bad', !!bad); if (bad) vsIn.setAttribute('aria-invalid', 'true'); else vsIn.removeAttribute('aria-invalid'); };
+  const LOCK_HELP = 'Their date is locked. Add yours in the box below.';
+  const renderVs = () => {
+    hero.classList.toggle('locked', locked);
+    input.readOnly = locked;
+    $('#pick button').hidden = locked;
+    $('#pick label').textContent = locked ? 'Sent to you (locked)' : 'Month and day, no year';
+    if (locked) { help.textContent = LOCK_HELP; help.classList.remove('bad'); input.removeAttribute('aria-invalid'); }
+    else if (help.textContent === LOCK_HELP) help.textContent = HELP;
+    $('#vs-h').textContent = locked ? 'Now yours?' : 'You vs a friend';
+    $('#vs-dek').textContent = locked ? 'A friend sent you their date. Add yours to see both ranks.' : "Type a friend's month and day to see whose birthday is rarer, or send them a challenge link.";
+    $('#vs-label').textContent = locked ? 'Your month and day, no year' : 'Their month and day, no year';
+    vsIn.placeholder = locked ? 'July 4' : 'Dec 25';
+    $('#vs-unlock').hidden = !locked;
+    $('#vs-chal').hidden = locked;
+    $('#vs-save').hidden = $('#vs-copy').hidden = !friend;
+    vsOut.hidden = !friend;
+    if (!friend) return;
+    $('#vs-a-who').textContent = locked ? 'Sent to you' : 'Your date'; $('#vs-b-who').textContent = locked ? 'You' : 'Friend';
+    for (const [id, x] of [['a', cur], ['b', friend]]) {
+      $(`#vs-${id}-d`).textContent = nameOf(x); $(`#vs-${id}-r`).textContent = x.rank; $(`#vs-${id}-s`).textContent = shortSay(x);
+      $(`#vs-pin-${id}`).style.setProperty('--at', ((x.rank - 1) / 365).toFixed(4));
+    }
+    $('#vs-gap').textContent = gapText();
+  };
+  const setFriend = (x) => {
+    friend = x; vsIn.value = nameOf(x); setVsHelp(VS_HELP, false);
+    history.replaceState(null, '', currentHash());
+    renderVs();
+  };
+  $('#vsform').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const r = parse(vsIn.value);
+    if (r.error) { setVsHelp(r.error, true); return; }
+    setFriend(find(r.m, r.d));
   });
+  vsIn.addEventListener('input', () => { if (vsIn.hasAttribute('aria-invalid')) setVsHelp(VS_HELP, false); });
+  const vsay = (s) => sayIn($('#vs-msg'), s);
+  const copyText = async (url, ok) => { try { await navigator.clipboard.writeText(url); vsay(ok); } catch { vsay('Copy this link: ' + url); } };
+  $('#vs-chal').addEventListener('click', () => {
+    const hash = `#d=${key(cur)}&vs=`;
+    copyText(publicLink(hash), 'Challenge link copied. Your friend sees your date and types theirs. Only dates are in it.');
+  });
+  $('#vs-copy').addEventListener('click', () => {
+    history.replaceState(null, '', currentHash());
+    copyText(publicLink(currentHash()), 'Link copied. It holds two month-days and nothing else.');
+  });
+  $('#vs-unlock').addEventListener('click', () => {
+    locked = false; friend = null; vsIn.value = ''; setVsHelp(VS_HELP, false);
+    history.replaceState(null, '', currentHash());
+    renderVs(); input.focus();
+  });
+
+  // The two-date PNG: same frame as the single card, two columns, one shared meter.
+  const drawPair = async () => {
+    await Promise.all([document.fonts.load('120px Gloock'), document.fonts.load('600 40px Schibsted'), document.fonts.load('400 30px Schibsted')]);
+    const W = 1080, H = 1350, P = 84;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d');
+    const ink = '#0f3b2c', coral = '#e0502c', cinkb = '#b83a18', soft = '#46665a';
+    await frame(g, W, H);
+    g.fillStyle = ink; g.textBaseline = 'alphabetic';
+    g.font = '600 34px Schibsted, sans-serif'; g.fillText('Two birthdays, ranked', P + 20, 306);
+    const colW = 416, xs = [P + 20, P + 20 + colW + 40];
+    // neutral tags: the PNG is read by people who were not in the conversation
+    const cols = [[cur, 'First date', ink], [friend, 'Second date', cinkb]];
+    const fit = (txt, font, max, start) => { let n = start; do { g.font = font(n); n -= 2; } while (g.measureText(txt).width > max && n > 24); };
+    for (let i = 0; i < 2; i++) {
+      const [x, tag, col] = cols[i], cx = xs[i];
+      g.fillStyle = col; g.beginPath(); g.roundRect(cx, 340, 22, 22, 5); g.fill();
+      g.fillStyle = soft; g.font = '600 30px Schibsted, sans-serif'; g.fillText(tag, cx + 34, 362);
+      g.fillStyle = ink; fit(nameOf(x), (n) => `${n}px Gloock, serif`, colW, 64); g.fillText(nameOf(x), cx, 440);
+      g.fillStyle = coral; fit(String(x.rank), (n) => `${n}px Gloock, serif`, colW - 28, 220); g.fillText(String(x.rank), cx - 4, 640);
+      g.fillStyle = ink; g.font = '600 40px Schibsted, sans-serif'; g.fillText('of 366', cx, 690);
+      g.font = '500 34px Schibsted, sans-serif'; g.fillText(shortSay(x), cx, 744);
+      const common = x.rank <= 60, art = common ? await crowdArt() : await candleArt();
+      const aw = common ? 160 : 120, ah = 160;
+      if (art) { g.save(); g.beginPath(); g.roundRect(cx, 772, aw, ah, 16); g.clip(); g.drawImage(art, cx, 772, aw, ah); g.restore(); }
+    }
+    // shared meter: first date's pin above the bar, second date's below
+    const mx = P + 20, mw = W - 2 * (P + 20), my = 1010;
+    for (let i = 0; i < 6; i++) { g.fillStyle = ['#1d5c47', '#3f7a4f', '#7a9a55', '#c9a24a', '#ec8045', '#ff5e3a'][i]; g.fillRect(mx + (mw / 6) * i, my, mw / 6 - 4, 22); }
+    const pa = mx + mw * ((cur.rank - 1) / 365), pb = mx + mw * ((friend.rank - 1) / 365);
+    g.fillStyle = ink; g.beginPath(); g.moveTo(pa, my - 6); g.lineTo(pa - 14, my - 30); g.lineTo(pa + 14, my - 30); g.fill();
+    g.fillStyle = cinkb; g.beginPath(); g.moveTo(pb, my + 28); g.lineTo(pb - 14, my + 52); g.lineTo(pb + 14, my + 52); g.fill();
+    g.font = '400 28px Schibsted, sans-serif'; g.fillStyle = soft; g.fillText('most common', mx, my + 96); g.textAlign = 'right'; g.fillText('rarest', mx + mw, my + 96); g.textAlign = 'left';
+    g.fillStyle = ink; g.font = '600 40px Schibsted, sans-serif'; g.fillText(gapText(), mx, 1156);
+    if (isLeap(cur) || isLeap(friend)) { g.font = '400 28px Schibsted, sans-serif'; g.fillStyle = soft; g.fillText('Feb 29 is rare because it only happens every 4 years.', mx, 1190); }
+    g.fillStyle = soft; g.font = '400 24px Schibsted, sans-serif';
+    g.fillText(`US births ${meta.years}: SSA via FiveThirtyEight, CC BY 4.0. Averaged and ranked.`, P + 20, 1228);
+    g.fillText(publicFooter(currentHash()), P + 20, 1262);
+    return cv;
+  };
+  $('#vs-save').addEventListener('click', async () => deliver(await drawPair(), `birthdays-${key(cur)}-vs-${key(friend)}.png`, vsay));
 
   // ---------- billion-second day (Foil's C1 fold-in; year never leaves this box) ----------
   const bout = $('#bout');
@@ -233,4 +363,5 @@
   window.__twins = twins;
 
   load();
+  renderVs();
 })();
