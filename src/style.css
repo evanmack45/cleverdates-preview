@@ -183,3 +183,11 @@ html:not(.js) .vs { display: none; }
 .rb-go { display: inline-block; font: 700 17px/1 var(--sans); color: var(--ink); background: var(--coral); border-radius: 12px; padding: 14px 18px; text-decoration: none; }
 .rb-go:hover { background: #ff9274; }
 @media (min-width: 900px) { .rb { padding: 16px 32px 48px; } .rb .hero-art { margin: 0 0 24px; } .rb .hero-art img { height: auto; aspect-ratio: 1400 / 547; border-radius: 18px; } }
+
+/* /most-common-birthday/: the card is the hero */
+.mc .card { margin: 0 0 14px; max-width: 520px; }
+.mc .share { margin: 0 0 18px; }
+.mc .rb-list .me { background: transparent; border-radius: 0; }
+.rb-x { display: inline-block; padding: 8px 0; font-weight: 600; }
+.rb .attr a { display: inline-block; padding: 3px 0; }
+.rb .rb-note + .rb-note { margin-top: -10px; }

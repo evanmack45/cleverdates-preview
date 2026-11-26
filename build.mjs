@@ -182,6 +182,7 @@ ${ldTag}
 const RB = SITE + 'rarest-birthday/';
 const rare = [...dates].sort((a, b) => b.rank - a.rank);
 const top = rare[0], r2 = rare[1], r3 = rare[2];
+const common = [...dates].sort((a, b) => a.rank - b.rank);
 const dn = (x) => `${MONTHS[x.m - 1]} ${x.d}`;
 const pctRarer = Math.round(((FEB29.rank - 1) / 365) * 100);
 const answer = `No. February 29 is no. ${FEB29.rank} of 366, rarer than ${pctRarer}% of birthdays. The rarest is ${dn(top)}, no. ${top.rank}, with ${num(top.avg)} US births on an average day. ${dn(r2)} is next, then ${dn(r3)}.`;
@@ -220,10 +221,101 @@ const rbHTML = `<!doctype html>
  <p class="rb-a" id="rb-answer">${answer}</p>
  <ol class="rb-list" aria-label="The five rarest birthdays, and February 29">${rbRows}</ol>
  <p class="rb-note">February 29 comes every 4 years, so it feels rare. Counted by births per day, it is not.</p>
+ <p class="rb-note"><a class="rb-x" href="../most-common-birthday/">At the other end, the most common is ${dn(common[0])}</a></p>
  <p><a class="rb-go" href="../">Check your birthday</a></p>
  <p class="attr">${attribution}</p>
 </main>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
+</body>
+</html>`;
+
+// ---- /most-common-birthday/: one answer page, same data, same card art, same PNG code as the home ----
+const MC = SITE + 'most-common-birthday/';
+const c1 = common[0], c2 = common[1], c3 = common[2];
+const upPct = Math.round((c1.avg / meta.avgDay - 1) * 100);
+const mcAnswer = `${dn(c1)} is the most common birthday in the US, no. ${c1.rank} of 366. It averages ${num(c1.avg)} births a day, ${upPct}% above the ${num(meta.avgDay)} of an average date. ${dn(c2)} and ${dn(c3)} come next.`;
+if (mcAnswer.split(/\s+/).length > 60) throw new Error('mc first answer over 60 words');
+if (c1.rank !== 1 || c1.m !== 9 || c1.d !== 12) throw new Error('most-common page claim does not match data');
+const sepInTen = common.slice(0, 10).filter((x) => x.m === 9).length;
+const decInTen = common.slice(0, 10).filter((x) => x.m === 12).length;
+const mcRows = common.slice(0, 5).map((x) => `<li${x === c1 ? ' class="me"' : ''}><span class="n">${x.rank}</span><span class="d">${dn(x)}</span><span class="v">${num(x.avg)} a day</span></li>`).join('');
+const mcCard = `<article class="card mc-card" id="card" aria-labelledby="c-date"><img class="c-band" src="../art/result-band-410.webp" srcset="../art/result-band-410.webp 410w, ../art/result-band-819.webp 819w" sizes="(min-width: 900px) 720px, 100vw" width="819" height="230" alt="" decoding="async">${cardHTML(c1).replace('src="art/crowd-480.webp" srcset="art/crowd-480.webp 480w, art/crowd-1024.webp 1024w"', 'src="../art/crowd-480.webp" srcset="../art/crowd-480.webp 480w, ../art/crowd-1024.webp 1024w"').replace(/ loading="lazy"/, '').replace(/ hidden>/, '>').replace(/More common than \d+% of birthdays/, 'The most common birthday of all').replace(/\n <p class="c-note"[^\n]*/, '').replace(/ <div id="c-leaprow" hidden>[^\n]*\n/, '')}
+  <p class="c-src">US births ${meta.years}, SSA via FiveThirtyEight, CC BY 4.0</p>
+ </article>`;
+const MCLD = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'What is the most common birthday?', url: MC, description: `${dn(c1)} is the most common birthday in the US, no. 1 of 366, with ${num(c1.avg)} births on an average day.`, isPartOf: { '@type': 'WebSite', name: 'Clever Dates', url: SITE } };
+// The share-card code is cut out of src/app.js (loadImg .. drawCard, deliver) so the PNG on this page can never drift from the home's.
+const appSrc = readFileSync(join(here, 'src/app.js'), 'utf8');
+const cutA = appSrc.indexOf('let candleP = null'), cutB = appSrc.indexOf('  const deliver = async');
+const cutC = appSrc.indexOf('\n  };\n', cutB) + 6;
+if (cutA < 0 || cutB < cutA || cutC < cutB) throw new Error('share-card code not found in app.js');
+const mcJS = `// Save card image for /most-common-birthday/. The canvas code is cut from app.js at build time. Nothing is stored or sent.
+(() => {
+  const { meta, dates } = JSON.parse(document.getElementById('dates').textContent);
+  const $ = (s) => document.querySelector(s);
+  const MONTHS = ${JSON.stringify(MONTHS)};
+  const num = (n) => n.toLocaleString('en-US');
+  const pad = (n) => String(n).padStart(2, '0');
+  const cur = dates.find((x) => x.rank === 1);
+  const sayFor = (x) => 'The most common birthday of all';
+  const isLeap = () => false;
+  const perYear = (x) => Math.round(x.avg / 4);
+  const CANONICAL = 'https://cleverdates.com/most-common-birthday/';
+  const isLocalPage = () => location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const publicFooter = () => (isLocalPage() ? CANONICAL : location.origin + location.pathname).replace(/index\\.html$/, '').replace(/\\/?$/, '/').replace(/^https?:\\/\\//, '');
+  const msg = $('#share-msg');
+  const say = (s) => { msg.textContent = s; clearTimeout(msg._t); msg._t = setTimeout(() => (msg.textContent = ''), 4500); };
+${appSrc.slice(cutA, cutC).replace(/'art\//g, "'../art/")}
+  $('#save').addEventListener('click', async () => deliver(await drawCard(), 'most-common-birthday-' + pad(cur.m) + '-' + pad(cur.d) + '.png', say));
+  $('#copy').addEventListener('click', async () => {
+    const url = location.origin === 'null' || isLocalPage() ? CANONICAL : location.origin + location.pathname;
+    try { await navigator.clipboard.writeText(url); say('Link copied.'); } catch { say('Copy this link: ' + url); }
+  });
+})();
+`;
+const mcHTML = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="${MC}">
+<meta property="og:url" content="${MC}">
+<title>What is the most common birthday? | Clever Dates</title>
+<meta name="description" content="${dn(c1)} is the most common birthday in the US: no. 1 of 366, with ${num(c1.avg)} births on an average day.">
+<meta property="og:title" content="What is the most common birthday?">
+<meta property="og:description" content="${dn(c1)}, no. 1 of 366, with ${num(c1.avg)} US births on an average day.">
+<meta property="og:image" content="${SITE}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A slice of birthday cake with one lit candle inside a ring of small unlit candles, risograph style.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify(MCLD)}</script>
+<link rel="preload" href="../fonts/gloock.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/schibsted.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230f3b2c'/%3E%3Crect x='9' y='9' width='5' height='5' fill='%23ff7a59'/%3E%3C/svg%3E">
+<script>document.documentElement.className='js'</script>
+</head>
+<body>
+<header class="bar"><a class="mark" href="../">Clever Dates</a><nav aria-label="Page"><a href="../">Check yours</a></nav></header>
+<main class="rb mc">
+ <h1>What is the most common birthday?</h1>
+ <p class="rb-a" id="rb-answer">${mcAnswer}</p>
+ ${mcCard}
+ <div class="share">
+  <button type="button" id="save">Save card image</button>
+  <button type="button" id="copy">Copy link</button>
+  <p id="share-msg" role="status"></p>
+ </div>
+ <ol class="rb-list" aria-label="The five most common birthdays">${mcRows}</ol>
+ <p class="rb-note">${['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'][sepInTen]} of the 10 most common dates are in September, and ${['zero','one','two','three','four','five','six','seven','eight','nine','ten'][decInTen]} are in December.</p>
+ <p class="rb-note"><a class="rb-x" href="../rarest-birthday/">At the other end, the rarest is ${dn(top)}</a></p>
+ <p><a class="rb-go" href="../">Check your birthday</a></p>
+ <p class="attr">${attribution}</p>
+</main>
+<footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
+<script type="application/json" id="dates">${JSON.stringify({ meta, dates: [c1] }).replace(/</g, '\\u003c')}</script>
+<script src="../mc.js" defer></script>
 </body>
 </html>`;
 
@@ -233,6 +325,9 @@ mkdirSync(join(out, 'data'), { recursive: true });
 writeFileSync(join(out, 'index.html'), html);
 mkdirSync(join(out, 'rarest-birthday'), { recursive: true });
 writeFileSync(join(out, 'rarest-birthday/index.html'), rbHTML);
+mkdirSync(join(out, 'most-common-birthday'), { recursive: true });
+writeFileSync(join(out, 'most-common-birthday/index.html'), mcHTML);
+writeFileSync(join(out, 'mc.js'), mcJS);
 for (const f of ['style.css', 'app.js', 'og.jpg']) { copyFileSync(join(here, 'src', f), join(out, f)); }
 mkdirSync(join(out, 'art'), { recursive: true });
 for (const f of readdirSync(join(here, 'src/art'))) copyFileSync(join(here, 'src/art', f), join(out, 'art', f));
@@ -240,7 +335,7 @@ for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 's
 copyFileSync(join(here, 'data/dates.json'), join(out, 'data/dates.json'));
 copyFileSync(join(here, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'), join(out, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'));
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
-writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url><url><loc>${RB}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url><url><loc>${RB}</loc></url><url><loc>${MC}</loc></url></urlset>\n`);
 writeFileSync(join(out, 'CNAME'), 'cleverdates.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);
