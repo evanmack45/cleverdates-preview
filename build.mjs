@@ -308,7 +308,7 @@ const mcHTML = `<!doctype html>
  <p class="rb-note">${['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'][sepInTen]} of the 10 most common dates are in September, and ${['zero','one','two','three','four','five','six','seven','eight','nine','ten'][decInTen]} are in December.</p>
  <p class="rb-note"><a class="rb-x" href="../rarest-birthday/">At the other end, the rarest is ${dn(top)}</a></p>
  <p><a class="rb-go" href="../">Check your birthday</a></p>
- <p class="attr">${attribution}</p>
+ <p class="attr">Pi: the first ${num(meta.piDigits)} digits, computed with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked another way. ${attribution}</p>
 </main>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
 <script type="application/json" id="dates">${JSON.stringify({ meta, dates: [c1] }).replace(/</g, '\\u003c')}</script>
