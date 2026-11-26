@@ -141,9 +141,9 @@ ${ldTag}
  <div class="grid" id="grid" role="grid" aria-label="Calendar of all 366 birthdays shaded by how common they are. Use the text box above to pick a date.">${gridHTML}</div>
  <div class="key" aria-hidden="true"><span>more common</span>${[0, 1, 2, 3, 4, 5].map((i) => `<i class="g-c s${i}"></i>`).join('')}<span>rarer</span></div>
  <div class="lists">
-  <div><h3>Most common</h3><ol>${extremes.slice(0, 5).map((x, i) => listItem(x, i)).join('')}</ol>
+  <div><h3><a href="most-common-birthday/">Most common</a></h3><ol>${extremes.slice(0, 5).map((x, i) => listItem(x, i)).join('')}</ol>
    <figure class="crowd-art"><img src="art/crowd-480.webp" srcset="art/crowd-480.webp 480w, art/crowd-1024.webp 1024w" sizes="(min-width: 900px) 240px, 45vw" width="1024" height="1024" loading="lazy" decoding="async" alt="A crowd of lit birthday candles packed side by side."></figure></div>
-  <div><h3>Rarest</h3><ol>${extremes.slice(-5).reverse().map((x, i) => listItem(x, i)).join('')}</ol>
+  <div><h3><a href="rarest-birthday/">Rarest</a></h3><ol>${extremes.slice(-5).reverse().map((x, i) => listItem(x, i)).join('')}</ol>
    <figure class="rare-art"><img src="art/candle-360.webp" srcset="art/candle-360.webp 360w, art/candle-640.webp 640w" sizes="(min-width: 900px) 240px, 60vw" width="640" height="853" loading="lazy" decoding="async" alt="Risograph print: one tall pink birthday candle burns alone on a wide teal plain under a pale sun."></figure></div>
  </div>
 </section>
@@ -168,7 +168,7 @@ ${ldTag}
  <p class="attr">Pi: the first ${num(meta.piDigits)} digits, computed with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked another way, searched as four digits (July 4 is 0704). Birth data: <a href="${SOURCE}" rel="noopener">FiveThirtyEight, U.S. Births</a> (Social Security Administration, ${meta.years}), <a href="${LICENSE}" rel="noopener">CC BY 4.0</a>, changed: averaged by month and day, then ranked. Illustrations were made with an AI image model (Nano Banana Pro) and do not show real people.</p>
 </section>
 </main>
-<footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
+<footer class="foot"><p class="foot-pages"><a href="most-common-birthday/">Most common</a><a href="rarest-birthday/">Rarest</a></p><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
 <script type="application/json" id="dates">${JSON.stringify({ meta, dates }).replace(/</g, '\\u003c')}</script>
 <script src="app.js" defer></script>
 </body>
