@@ -47,7 +47,7 @@
   const perYear = (x) => Math.round(x.avg / 4);
   const noteFor = (x) => isLeap(x)
     ? `Feb 29 is rare because it only happens every 4 years. In a leap year it gets close to a normal day's births. Over 4 years that is about ${num(perYear(x))} a year.`
-    : x.rank > 356 ? 'Holidays rank low because fewer births are scheduled on them.' : '';
+    : '';
   const card = $('#card');
   const show = (x, { push = true, scroll = false } = {}) => {
     cur = x;

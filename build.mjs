@@ -164,11 +164,8 @@ ${ldTag}
 
 <section class="data" id="data" aria-labelledby="data-h">
  <h2 id="data-h">About the data</h2>
- <p>The rank uses ${num(meta.days)} days of US births, ${meta.years}, ${num(meta.births)} babies in all. For each month and day we take the average number of births on that date, then rank the 366 dates from most common (no. 1) to rarest (no. 366).</p>
- <p>February 29 is rare because it only happens every 4 years. It is ranked by its births per leap year, ${num(FEB29.avg)} on average, which is close to the ${num(meta.avgDay)} on an average day. Spread over the 4 years it takes to come around, that is ${num(FEB29.avg)} divided by 4, about ${num(Math.round(FEB29.avg / 4))} births a year, under a quarter of what an average date gets each year.</p>
- <p>Pi digits: the first ${num(meta.piDigits)} decimal digits, computed for this page with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked with a second method. We look for the month and day as four digits, so July 4 is 0704.</p>
- <p class="attr">${attribution}</p>
- <p class="attr">Illustrations made with an AI image model (Nano Banana Pro). No real people are shown.</p>
+ <p>The rank uses ${num(meta.days)} days of US births, ${meta.years}, ${num(meta.births)} babies in all, or ${num(meta.avgDay)} a day. We average births by month and day, then rank the 366 dates, no. 1 (most common) to no. 366 (rarest). February 29 is ranked by its ${num(FEB29.avg)} births per leap year, about ${num(Math.round(FEB29.avg / 4))} a year over 4 years.</p>
+ <p class="attr">Pi: the first ${num(meta.piDigits)} digits, computed with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked another way, searched as four digits (July 4 is 0704). Birth data: <a href="${SOURCE}" rel="noopener">FiveThirtyEight, U.S. Births</a> (Social Security Administration, ${meta.years}), <a href="${LICENSE}" rel="noopener">CC BY 4.0</a>, changed: averaged by month and day, then ranked. Illustrations were made with an AI image model (Nano Banana Pro) and do not show real people.</p>
 </section>
 </main>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
@@ -185,11 +182,12 @@ const top = rare[0], r2 = rare[1], r3 = rare[2];
 const common = [...dates].sort((a, b) => a.rank - b.rank);
 const dn = (x) => `${MONTHS[x.m - 1]} ${x.d}`;
 const pctRarer = Math.round(((FEB29.rank - 1) / 365) * 100);
-const answer = `No. February 29 is no. ${FEB29.rank} of 366, rarer than ${pctRarer}% of birthdays. The rarest is ${dn(top)}, no. ${top.rank}, with ${num(top.avg)} US births on an average day. ${dn(r2)} is next, then ${dn(r3)}.`;
+const perYr = Math.round(FEB29.avg / 4);
+const answer = `No, by births per day. February 29 is no. ${FEB29.rank} of 366, and ${dn(top)} is rarest at ${num(top.avg)} a day. By births per year it is the rarest, at ${num(perYr)} a year over 4 years.`;
 if (answer.split(/\s+/).length > 60) throw new Error('first answer over 60 words');
-if (top.rank !== 366 || FEB29.rank >= 366) throw new Error('rarest page claim does not match data');
+if (top.rank !== 366 || FEB29.rank >= 366 || !(FEB29.avg / 4 < top.avg)) throw new Error('rarest page claim does not match data');
 const rbRows = [...rare.slice(0, 5), FEB29].map((x) => `<li${x === FEB29 ? ' class="me"' : ''}><span class="n">${x.rank}</span><span class="d">${dn(x)}</span><span class="v">${num(x.avg)} a day${x === FEB29 ? ', per leap year' : ''}</span></li>`).join('');
-const RBLD = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Is February 29 the rarest birthday?', url: RB, description: `No. February 29 ranks ${FEB29.rank} of 366 for US births. The rarest birthday is ${dn(top)}.`, isPartOf: { '@type': 'WebSite', name: 'Clever Dates', url: SITE } };
+const RBLD = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Is February 29 the rarest birthday?', url: RB, description: `No, by births per day. February 29 is no. ${FEB29.rank} of 366 for US births. By births per year it is the rarest, at ${num(perYr)}.`, isPartOf: { '@type': 'WebSite', name: 'Clever Dates', url: SITE } };
 const rbHTML = `<!doctype html>
 <html lang="en">
 <head>
@@ -198,9 +196,9 @@ const rbHTML = `<!doctype html>
 <link rel="canonical" href="${RB}">
 <meta property="og:url" content="${RB}">
 <title>Is February 29 the rarest birthday? | Clever Dates</title>
-<meta name="description" content="No. February 29 is no. ${FEB29.rank} of 366 for US births. The rarest birthday is ${dn(top)}.">
+<meta name="description" content="No, by births per day. February 29 is no. ${FEB29.rank} of 366 for US births. By births per year it is the rarest, at ${num(perYr)}.">
 <meta property="og:title" content="Is February 29 the rarest birthday?">
-<meta property="og:description" content="No. The rarest birthday is ${dn(top)}, no. ${top.rank} of 366.">
+<meta property="og:description" content="No, by births per day, where ${dn(top)} is rarest. By births per year, February 29 is.">
 <meta property="og:image" content="${SITE}og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -220,7 +218,6 @@ const rbHTML = `<!doctype html>
  <h1>Is February 29 the rarest birthday?</h1>
  <p class="rb-a" id="rb-answer">${answer}</p>
  <ol class="rb-list" aria-label="The five rarest birthdays, and February 29">${rbRows}</ol>
- <p class="rb-note">February 29 comes every 4 years, so it feels rare. Counted by births per day, it is not.</p>
  <p class="rb-note"><a class="rb-x" href="../most-common-birthday/">At the other end, the most common is ${dn(common[0])}</a></p>
  <p><a class="rb-go" href="../">Check your birthday</a></p>
  <p class="attr">${attribution}</p>
