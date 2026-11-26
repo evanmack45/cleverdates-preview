@@ -194,3 +194,5 @@ html:not(.js) .vs { display: none; }
 
 .lists h3 a { padding: 8px 0; }
 .foot-pages { display: flex; justify-content: center; gap: 1.5em; flex-wrap: wrap; }
+
+.mc .attr { max-width: 75ch; }
