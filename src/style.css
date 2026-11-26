@@ -166,3 +166,20 @@ html:not(.js) .vs { display: none; }
 @media (max-width: 899px) { .hero.locked { grid-template-areas: "ask" "vs" "card" "share"; } .hero.locked .vs { border-top: 0; margin-top: 0; padding-top: 0; } }
 .pick-row input::placeholder { color: #5b5b5b; opacity: 1; }
 @media (min-width: 900px) { .hero.locked { grid-template-areas: "ask card" "vs card" "share card"; } .hero.locked .hero-art { display: none; } .hero.locked .vs { border-top: 0; margin-top: 0; padding-top: 0; } }
+
+/* ---------- /rarest-birthday/ answer page ---------- */
+.rb { max-width: 760px; margin: 0 auto; padding: 6px 20px 32px; }
+.rb .hero-art { margin: 0 -20px 16px; }
+.rb h1 { max-width: 16ch; font-size: clamp(40px, 7vw, 64px); }
+.rb-a { font-size: 19px; font-weight: 600; margin: 0 0 18px; max-width: 34em; }
+.rb-list { list-style: none; margin: 0 0 14px; padding: 0; background: var(--paper); color: var(--ink); border-radius: 18px; }
+.rb-list li { display: grid; grid-template-columns: 58px 1fr auto; gap: 8px; align-items: baseline; padding: 12px 18px; border-bottom: 1px solid #ddd2bd; }
+.rb-list li:last-child { border-bottom: 0; }
+.rb-list .n { font: 400 26px/1 var(--serif); color: var(--coral-ink); font-variant-numeric: lining-nums; }
+.rb-list .d { font-weight: 700; white-space: nowrap; }
+.rb-list .v { font-size: 14px; color: var(--ink2); text-align: right; }
+.rb-list .me { background: #ecdfc4; border-radius: 0 0 18px 18px; }
+.rb-note { margin: 0 0 18px; color: var(--cream2); max-width: 34em; }
+.rb-go { display: inline-block; font: 700 17px/1 var(--sans); color: var(--ink); background: var(--coral); border-radius: 12px; padding: 14px 18px; text-decoration: none; }
+.rb-go:hover { background: #ff9274; }
+@media (min-width: 900px) { .rb { padding: 16px 32px 48px; } .rb .hero-art { margin: 0 0 24px; } .rb .hero-art img { height: auto; aspect-ratio: 1400 / 547; border-radius: 18px; } }

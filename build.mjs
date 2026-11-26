@@ -60,6 +60,9 @@ const listItem = (x, i) => `<li><span class="n">${i + 1}</span><a href="#d=${Str
 
 const attribution = `Birth data: <a href="${SOURCE}" rel="noopener">FiveThirtyEight, U.S. Births</a>, from the Social Security Administration, ${meta.years}. <a href="${LICENSE}" rel="noopener">CC BY 4.0</a>. Changed: averaged by month and day, then ranked.`;
 
+const LD = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Clever Dates', url: SITE, description: 'Type a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.', applicationCategory: 'EntertainmentApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+const ldTag = `<script type="application/ld+json">${JSON.stringify(LD).replace(/</g, '\\u003c')}</script>`;
+
 const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -77,6 +80,7 @@ const html = `<!doctype html>
 <meta property="og:image:alt" content="A slice of birthday cake with one lit candle inside a ring of small unlit candles, risograph style.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+${ldTag}
 <link rel="preload" href="fonts/gloock.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/schibsted.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="art/candles-800.webp" imagesrcset="art/candles-800.webp 800w, art/candles-1400.webp 1400w" imagesizes="(min-width: 900px) 600px, 100vw" fetchpriority="high">
@@ -173,10 +177,62 @@ const html = `<!doctype html>
 </body>
 </html>`;
 
+
+// ---- /rarest-birthday/: one answer page, built from the same data ----
+const RB = SITE + 'rarest-birthday/';
+const rare = [...dates].sort((a, b) => b.rank - a.rank);
+const top = rare[0], r2 = rare[1], r3 = rare[2];
+const dn = (x) => `${MONTHS[x.m - 1]} ${x.d}`;
+const pctRarer = Math.round(((FEB29.rank - 1) / 365) * 100);
+const answer = `No. February 29 is no. ${FEB29.rank} of 366, rarer than ${pctRarer}% of birthdays. The rarest is ${dn(top)}, no. ${top.rank}, with ${num(top.avg)} US births on an average day. ${dn(r2)} is next, then ${dn(r3)}.`;
+if (answer.split(/\s+/).length > 60) throw new Error('first answer over 60 words');
+if (top.rank !== 366 || FEB29.rank >= 366) throw new Error('rarest page claim does not match data');
+const rbRows = [...rare.slice(0, 5), FEB29].map((x) => `<li${x === FEB29 ? ' class="me"' : ''}><span class="n">${x.rank}</span><span class="d">${dn(x)}</span><span class="v">${num(x.avg)} a day${x === FEB29 ? ', per leap year' : ''}</span></li>`).join('');
+const RBLD = { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Is February 29 the rarest birthday?', url: RB, description: `No. February 29 ranks ${FEB29.rank} of 366 for US births. The rarest birthday is ${dn(top)}.`, isPartOf: { '@type': 'WebSite', name: 'Clever Dates', url: SITE } };
+const rbHTML = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="${RB}">
+<meta property="og:url" content="${RB}">
+<title>Is February 29 the rarest birthday? | Clever Dates</title>
+<meta name="description" content="No. February 29 is no. ${FEB29.rank} of 366 for US births. The rarest birthday is ${dn(top)}.">
+<meta property="og:title" content="Is February 29 the rarest birthday?">
+<meta property="og:description" content="No. The rarest birthday is ${dn(top)}, no. ${top.rank} of 366.">
+<meta property="og:image" content="${SITE}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A slice of birthday cake with one lit candle inside a ring of small unlit candles, risograph style.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify(RBLD)}</script>
+<link rel="preload" href="../fonts/gloock.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/schibsted.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230f3b2c'/%3E%3Crect x='9' y='9' width='5' height='5' fill='%23ff7a59'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="bar"><a class="mark" href="../">Clever Dates</a><nav aria-label="Page"><a href="../">Check yours</a></nav></header>
+<main class="rb">
+ <figure class="hero-art"><img src="../art/candles-800.webp" srcset="../art/candles-800.webp 800w, ../art/candles-1400.webp 1400w" sizes="(min-width: 900px) 600px, 100vw" width="1400" height="547" fetchpriority="high" alt="Risograph print: a field of tiny unlit teal birthday candles with four glowing pink lit ones, one much brighter than the rest."></figure>
+ <h1>Is February 29 the rarest birthday?</h1>
+ <p class="rb-a" id="rb-answer">${answer}</p>
+ <ol class="rb-list" aria-label="The five rarest birthdays, and February 29">${rbRows}</ol>
+ <p class="rb-note">February 29 comes every 4 years, so it feels rare. Counted by births per day, it is not.</p>
+ <p><a class="rb-go" href="../">Check your birthday</a></p>
+ <p class="attr">${attribution}</p>
+</main>
+<footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
+</body>
+</html>`;
+
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'fonts'), { recursive: true });
 mkdirSync(join(out, 'data'), { recursive: true });
 writeFileSync(join(out, 'index.html'), html);
+mkdirSync(join(out, 'rarest-birthday'), { recursive: true });
+writeFileSync(join(out, 'rarest-birthday/index.html'), rbHTML);
 for (const f of ['style.css', 'app.js', 'og.jpg']) { copyFileSync(join(here, 'src', f), join(out, f)); }
 mkdirSync(join(out, 'art'), { recursive: true });
 for (const f of readdirSync(join(here, 'src/art'))) copyFileSync(join(here, 'src/art', f), join(out, 'art', f));
@@ -184,7 +240,7 @@ for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 's
 copyFileSync(join(here, 'data/dates.json'), join(out, 'data/dates.json'));
 copyFileSync(join(here, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'), join(out, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'));
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
-writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url><url><loc>${RB}</loc></url></urlset>\n`);
 writeFileSync(join(out, 'CNAME'), 'cleverdates.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);
