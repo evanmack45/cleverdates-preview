@@ -164,7 +164,7 @@ ${ldTag}
 
 <section class="data" id="data" aria-labelledby="data-h">
  <h2 id="data-h">About the data</h2>
- <p>The rank uses ${num(meta.days)} days of US births, ${meta.years}, ${num(meta.births)} babies in all. For each month and day we take the average number of births on that date, then rank the 366 dates from most common (no. 1) to rarest (no. 366). Holidays rank low because fewer births are scheduled on them.</p>
+ <p>The rank uses ${num(meta.days)} days of US births, ${meta.years}, ${num(meta.births)} babies in all. For each month and day we take the average number of births on that date, then rank the 366 dates from most common (no. 1) to rarest (no. 366).</p>
  <p>February 29 is rare because it only happens every 4 years. It is ranked by its births per leap year, ${num(FEB29.avg)} on average, which is close to the ${num(meta.avgDay)} on an average day. Spread over the 4 years it takes to come around, that is ${num(FEB29.avg)} divided by 4, about ${num(Math.round(FEB29.avg / 4))} births a year, under a quarter of what an average date gets each year.</p>
  <p>Pi digits: the first ${num(meta.piDigits)} decimal digits, computed for this page with <a href="https://mpmath.org/" rel="noopener">mpmath</a> and checked with a second method. We look for the month and day as four digits, so July 4 is 0704.</p>
  <p class="attr">${attribution}</p>
