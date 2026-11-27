@@ -66,3 +66,7 @@ html:not(.js) .sbar, html:not(.js) .mpick, html:not(.js) .dpick, html:not(.js) .
 .scan .hero.locked .hero-art { display: none; }
 .vs .mpick { margin-top: 14px; }
 .vs .pick { clear: both; }
+/* Short page (baseline #7, <= 4 screens at 390): the map's heat grid is that section's graphic, so the list art goes on phones; tighter collapsed blocks. */
+@media (max-width: 899px) { .scan .lists .crowd-art, .scan .lists .rare-art { display: none; } }
+.scan .billion, .scan .data { padding-top: 8px; padding-bottom: 8px; margin-top: 0; }
+@media (max-width: 899px) { .scan .lists { gap: 12px; } .scan .lists li { gap: 8px; } .scan .lists .v { font-size: 14px; } .scan .lists li a { padding: 0 4px 0 0; } }
