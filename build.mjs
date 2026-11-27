@@ -326,9 +326,11 @@ const dayBtns = Array.from({ length: 31 }, (_, i) => { const x = byKey(EX.m, i +
 const scanAsk = ` <div class="ask">
   <figure class="hero-art"><img src="../art/candles-800.webp" srcset="../art/candles-800.webp 800w, ../art/candles-1400.webp 1400w" sizes="(min-width: 900px) 600px, 100vw" width="1400" height="547" fetchpriority="high" alt="Risograph print: a field of tiny unlit teal birthday candles with four glowing pink lit ones, one much brighter than the rest."></figure>
   <h1 id="h1">How rare is your birthday?</h1>
+  <div class="toy" id="toy">
   <div class="mpick" id="mpick" role="group" aria-label="Month">${monthBtns}</div>
   <div class="dpick" id="dpick" role="group" aria-label="Day. Darker is more common, brighter is rarer.">${dayBtns}</div>
   <div class="dkey" aria-hidden="true"><span>more common</span>${[0, 1, 2, 3, 4, 5].map((i) => `<i class="s${i}"></i>`).join('')}<span>rarer</span></div>
+  </div>
   <form class="pick" id="pick" role="search" action="#" novalidate>
    <label for="when">Or type it</label>
    <div class="pick-row"><input id="when" name="when" type="text" autocomplete="off" spellcheck="false" maxlength="24" placeholder="July 4" value="July 4" aria-describedby="when-help"><button type="submit">Show me</button></div>

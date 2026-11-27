@@ -25,7 +25,10 @@
     $('#when').value = txt; $('#pick').requestSubmit();
   };
   $('#mpick').addEventListener('click', (e) => { const b = e.target.closest('.mo'); if (!b) return; m = Number(b.dataset.m); d = Math.min(d, DIM[m - 1]); paint(); pick(); });
-  $('#dpick').addEventListener('click', (e) => { const b = e.target.closest('.dy'); if (!b || b.disabled) return; d = Number(b.dataset.d); paint(); pick(); });
+  $('#dpick').addEventListener('click', (e) => { const b = e.target.closest('.dy'); if (!b || b.disabled) return; d = Number(b.dataset.d); paint(); pick();
+    // Challenge: the comparison sits under the pickers; bring it up once the friend taps a day (not on a month tap).
+    if (document.querySelector('.hero.locked') && !$('#vs-out').hidden) $('#vs-out').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
   // Mirror whatever app.js shows (typed date, grid tap, list link, hash) into the buttons and the bar.
   const sync = () => {
     const t = /^([A-Z][a-z]+) (\d{1,2})$/.exec($('#c-date').textContent.trim()); if (!t) return;
@@ -35,12 +38,13 @@
   };
   new MutationObserver(sync).observe($('#card'), { subtree: true, childList: true, characterData: true });
   sync();
-  // Challenge link (locked hero): the pickers become the friend's input, so they sit under the friend's box, not above the locked date.
-  const ask = $('#mpick').parentElement, anchor = $('#mpick'), parts = [$('#mpick'), $('#dpick'), $('.dkey')].filter(Boolean);
+  // Challenge link (locked hero): the pickers (one #toy) become the friend's input. They sit under the locked date and the "Now yours?" heading,
+  // above the typable box, so all 43 buttons stay in the first screen (Shears cut 2, 11/27).
+  const toy = $('#toy'), ask = toy.parentElement, anchor = toy, parts = [toy];
   const home = document.createComment('pickers'); ask.insertBefore(home, anchor);
   const place = () => {
     const lockedNow = !!document.querySelector('.hero.locked'), form = $('#vsform');
-    if (lockedNow && form && parts[0].parentElement === ask) { form.after(...parts); if (!$('#vswhen').value) $$('.mo, .dy').forEach((x) => x.setAttribute('aria-pressed', 'false')); }
+    if (lockedNow && form && parts[0].parentElement === ask) { $('#vs-h').after(...parts); if (!$('#vswhen').value) $$('.mo, .dy').forEach((x) => x.setAttribute('aria-pressed', 'false')); }
     else if (!lockedNow && parts[0].parentElement !== ask) home.after(...parts);
   };
   new MutationObserver(place).observe($('.hero'), { attributes: true, attributeFilter: ['class'] });

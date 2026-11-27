@@ -56,7 +56,7 @@ html:not(.js) .sbar, html:not(.js) .mpick, html:not(.js) .dpick, html:not(.js) .
   .scan ~ .foot { padding-bottom: 24px; }
 }
 /* 48px taps everywhere on the preview (Dash 9:52 tap rule) */
-@media (max-width: 899px) { .dpick { gap: 3px; margin-inline: -8px; } .mpick, .dkey { margin-inline: -8px; } .dpick button { min-width: 48px; } }
+@media (max-width: 899px) { .toy { margin-inline: -8px; } .dpick { gap: 3px; } .dpick button { min-width: 48px; } }
 .scan .c-acts button, .scan #vs-chal, .scan .vs-form button, .scan button { min-height: 48px; }
 .scan .lists h3 a, .scan .lists li a { display: inline-flex; align-items: center; min-height: 48px; padding: 0 2px; min-width: 48px; }
 .scan .lists li { padding: 0; }
@@ -64,9 +64,17 @@ html:not(.js) .sbar, html:not(.js) .mpick, html:not(.js) .dpick, html:not(.js) .
 .foot a { display: inline-flex; align-items: center; min-height: 48px; }
 
 .scan .hero.locked .hero-art { display: none; }
-.vs .mpick { margin-top: 14px; }
 .vs .pick { clear: both; }
 /* Short page (baseline #7, <= 4 screens at 390): the map's heat grid is that section's graphic, so the list art goes on phones; tighter collapsed blocks. */
 @media (max-width: 899px) { .scan .lists .crowd-art, .scan .lists .rare-art { display: none; } }
 .scan .billion, .scan .data { padding-top: 8px; padding-bottom: 8px; margin-top: 0; }
 @media (max-width: 899px) { .scan .lists { gap: 12px; } .scan .lists li { gap: 8px; } .scan .lists .v { font-size: 14px; } .scan .lists li a { padding: 0 4px 0 0; } }
+
+/* Challenge link chrome (Shears cut 2): one-line heading, compact locked box, no dek/art/help, so the whole #toy is in the first screen above the sticky bar. */
+.scan .hero.locked h1 { font-size: 30px; max-width: none; margin-bottom: 6px; }
+.scan .hero.locked #pick label { font-size: 14px; margin-bottom: 2px; }
+.scan .hero.locked #when { min-height: 48px; padding-block: 6px; }
+.scan .hero.locked #when-help, .scan .hero.locked .vs-art, .scan .hero.locked .vs-dek { display: none; }
+.scan .hero.locked .vs h2 { font-size: 26px; margin: 10px 0 8px; }
+.scan .hero.locked .vs .toy { margin-bottom: 12px; }
+@media (min-width: 900px) { .scan .hero.locked h1 { font-size: 44px; } }
