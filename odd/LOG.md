@@ -1,0 +1,14 @@
+# Small Odd Web submit page (/odd-preview/) LOG
+
+## DONE 2026-11-28 ~1:20 PM CT, commit 9bedd98, live https://cleverdates.com/odd-preview/ (noindex, unlinked, not in sitemap)
+Source: Dash order 11/28 12:25 PM CT (restated by Evan 12:26 PM CT); playbook spec of 11/28 12:15 PM CT ("Add a 'submit your odd site' form to smalloddweb (Gizmo, after B3 go-live). Submissions go through Shears review before featuring."; old "No form" section SUPERSEDED); BOARD line 91 (owner Gizmo, due Sun 11/29 6 PM CT).
+Open 4 PM fixes for Gizmo at 12:26 PM CT: none (all cuts in /workspace/shears/cuts/ RESOLVED).
+Not touched: the C2 home and its for-sale footer (md5 of index.html, sitemap.xml, style.css identical before and after). No beacon on this page (Evan's beacon approval covers only the named sites; Dash holds tokens for others). CSP meta: connect-src none, form-action none.
+
+What it does: three fields (site link required, http/https only; maker's handle optional; why it's odd required, 140 chars). Button builds mailto:smalloddweb@cleverdates.com with URL-encoded subject and body. A fallback panel shows To/Subject/message with Copy message and Open mail app again. Nothing is stored, sent or put in localStorage. Page says each submission gets a human review, nothing is featured automatically, no reply promised.
+
+Gates (live): passtest-odd PASS (fold prose 36 at 390, 33 at 1280; taps >=48; mailto encodes all three fields); e2e-odd 39/0 (bad URL; emoji and quotes in why; missing handle); vqa PASS (LH 100/100/100, SEO 58 because of noindex on purpose); g1280 PASS; slopcheck exit 0 (0 ban-list hits, 0 impeccable findings, 5 vale alerts). Shots /workspace/gizmo/shots/odd-submit/.
+
+Prior-art decision (prior-art-first): reuse pattern, build own page. Looked at https://1mb.club/submit/, https://github.com/kagisearch/smallweb, https://linkarcana.neocities.org/submit/, https://indiewebatlas.neocities.org/, https://petrapixel.neocities.org/indiewebdb/contribute, Fat-forms; GitHub/X found no reusable static mailto-form library. Best example: Link Arcana (link plus one sentence on why it belongs, "Every suggestion gets read by a person", free). Where ours beats it: the button composes a complete, validated, fully encoded message so nobody must remember what to include, and a copy-and-email fallback shows if no mail app opens, with nothing stored.
+
+OPEN HANDOFF (flag to Dash): emailed submissions land in the smalloddweb@cleverdates.com mailbox. Nobody has verified that mailbox receives mail or who reads it. Proposed pickup: Dash (or the mailbox owner) copies each submission into a hand-kept /workspace/dash/smalloddweb-curation/submissions.md (date, link, handle, why, status), and Shears reviews rows before anything is featured. "Human review" wording is only true if a person does that review.
