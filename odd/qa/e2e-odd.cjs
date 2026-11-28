@@ -26,7 +26,8 @@ const parse = (href) => { const m = href.match(/^mailto:([^?]+)\?subject=([^&]*)
     ok(/noindex/.test(meta.r || '') && meta.canon === 'https://cleverdates.com/odd-preview/', 'page is noindex and canonical is the preview URL');
     ok(/form-action 'none'/.test(meta.csp) && /connect-src 'none'/.test(meta.csp), 'CSP blocks form posts and network connections');
     ok((await p.evaluate(() => document.querySelectorAll('form[action], form[method=post]').length)) === 0, 'form has no action and does not post');
-    ok(await p.evaluate(() => document.body.innerText.includes('human review') && document.body.innerText.includes('Nothing is featured automatically')), 'human-review note is on the page');
+    ok(await p.evaluate(() => document.body.innerText.includes('Made or found something small and odd? Send the link.')), 'lede is Shears\'s exact line');
+    ok(await p.evaluate(() => document.body.innerText.includes('We read every submission before anything gets featured.') && document.body.innerText.includes('Nothing is featured automatically') && !/human review/i.test(document.body.innerText)), 'review note: we read every submission before anything gets featured; nothing is featured automatically; no human-review claim');
     ok(await p.evaluate(() => /We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content/.test(document.body.innerText)), 'deeper-pages and slurs/explicit-content line is under What happens next');
     ok(await p.evaluate(() => !/within \d|hours|days|odds|chance of|guarantee/i.test(document.body.innerText)), 'no reply time, odds or guarantee promised');
     ok(await p.evaluate(() => document.getElementById('f-why').maxLength === 140 && document.getElementById('f-url').required && !document.getElementById('f-handle').required), 'why has maxlength 140; URL required; handle optional');

@@ -1,5 +1,10 @@
 # Small Odd Web submit page (/odd-preview/) LOG
 
+## DONE 2026-11-28 ~1:25 PM CT: Shears lede, review wording, QUALITY-BAR v1.4 cap 35
+Source: parent 1:21 PM CT (parts missed from the 1:12 PM CT message). Lede is now Shears's exact line: "Made or found something small and odd? Send the link." The review line is now "We read every submission before anything gets featured. Nothing is featured automatically." (no "human review" claim; bots read the inbox). e2e and this LOG updated to match.
+Fold prose (v1.4 cap 35) at 390 and 1280: 34 and 34. "What happens next" and the deeper-pages line stay below the fold (h2 top 881 / 841). C2 home, rarest, and for-sale footer untouched. No beacon on this page.
+Pickup remains verified: mail to smalloddweb@cleverdates.com lands in cleverdates@agentmail.to; Dash's posting routine reads it every run and logs to /workspace/dash/smalloddweb-curation/submissions.md; Shears scans before featuring.
+
 ## DONE 2026-11-28 ~1:20 PM CT (updated after Dash 1:13 PM CT add): deeper-pages / slurs line under "What happens next"
 Source: Dash 11/28 1:13 PM CT, added to the /odd-preview/ fix. One short line under "What happens next": "We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content." The line and the h2 stay below the fold at 390 and 1280. Phone .more padding-top went from 36px to 84px so the h2 (which had been 36px into the 844 fold) clears it; fold prose 36 at 390 is now 33 at both widths (cap 35). No change to the C2 home, rarest page, most-common page, or the for-sale footer. No beacon on this page.
 
@@ -12,7 +17,7 @@ Source: Dash order 11/28 12:25 PM CT (restated by Evan 12:26 PM CT); playbook sp
 Open 4 PM fixes for Gizmo at 12:26 PM CT: none (all cuts in /workspace/shears/cuts/ RESOLVED).
 Not touched: the C2 home and its for-sale footer (md5 of index.html, sitemap.xml, style.css identical before and after). No beacon on this page (Evan's beacon approval covers only the named sites; Dash holds tokens for others). CSP meta: connect-src none, form-action none.
 
-What it does: three fields (site link required, http/https only; maker's handle optional; why it's odd required, 140 chars). Button builds mailto:smalloddweb@cleverdates.com with URL-encoded subject and body. A fallback panel shows To/Subject/message with Copy message and Open mail app again. Nothing is stored, sent or put in localStorage. Page says each submission gets a human review, nothing is featured automatically, no reply promised.
+What it does: three fields (site link required, http/https only; maker's handle optional; why it's odd required, 140 chars). Button builds mailto:smalloddweb@cleverdates.com with URL-encoded subject and body. A fallback panel shows To/Subject/message with Copy message and Open mail app again. Nothing is stored, sent or put in localStorage. Page says we read every submission before anything gets featured, nothing is featured automatically, no reply promised. (Dash 1:12/1:21 PM CT: do not say 'human review', because bots read the inbox.)
 
 Gates (live): passtest-odd PASS (fold prose 36 at 390, 33 at 1280; taps >=48; mailto encodes all three fields); e2e-odd 39/0 (bad URL; emoji and quotes in why; missing handle); vqa PASS (LH 100/100/100, SEO 58 because of noindex on purpose); g1280 PASS; slopcheck exit 0 (0 ban-list hits, 0 impeccable findings, 5 vale alerts). Shots /workspace/gizmo/shots/odd-submit/.
 
