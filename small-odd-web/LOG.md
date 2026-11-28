@@ -55,3 +55,9 @@ Heading replace landed in 68d6ad9: `#signup-title` is exactly "Get new odd sites
 Follow-up (Dash A / QUALITY-BAR v1.5, cut file update 2:03 PM CT): moved "Submit your odd site" out of the 390 first screen, to just below the first card (more findable than the footer). The 390 first screen now holds the header chrome, h1, lede, signup heading, form (field, button, robot line), and a crop of the Enfilade hero. Local measure: fold prose 20/20; submit link top 1123 at 390 and 1052 at 1280 (both below the fold); hero a.hero 0.502 at 390 / 0.519 at 1280 (was 0.436 / 0.449). Cards unchanged. Form not submitted. build.mjs hook left intact.
 
 Live SHA, grep, visual-qa-gate, and shots: see the next entry after Pages builds.
+
+## 2026-11-28 ~2:04 PM CT live verification (heading 68d6ad9 + first-screen e54ea0f)
+
+https://cleverdates.com/small-odd-web/ public files, all 27, SHA-match e54ea0f29571fdbfa24018b2f75c77f5db36388f. `#signup-title` is exactly "Get new odd sites by email." `grep -ci "a week\|five odd"` is 0 on the live HTML and on the shipped JS (signup.js and config.js). Robot-check line is still there. "Submit your odd site" sits below the first card (top 1123 at 390, 1052 at 1280), out of both first screens.
+
+Live fold prose 20/20 at 390 and 1280 (gate-1128-sow2.js). Taps 48px, 0 fails. Hero a.hero 0.502 at 390 and 0.519 at 1280 (both ≥0.35; was 0.436 / 0.449). The 1280 img.hero-shot visible box is 0.346 because the image is max-width 854px in a 1280px anchor; the official measurer selects a.hero first. Cards unchanged. visual-qa-gate PASS, no P0; Lighthouse mobile 100/100/100/69, CLS 0, LCP 1.2s. Out: /workspace/mason/sow-golive-live-2026-11-28/gate-copyfix. Shots (viewed): /workspace/mason/sow-golive-live-2026-11-28/phone-390-fold-copyfix@2x.png and desktop-1280-fold-copyfix@2x.png. Form not submitted.
