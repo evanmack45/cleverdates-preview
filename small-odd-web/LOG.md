@@ -47,3 +47,11 @@ visual-qa-gate (URL positional) PASS, no P0, and its own Lighthouse mobile also 
 Source: /workspace/shears/cuts/cleverdates.com-small-odd-web-2026-11-28.md. Replaced the unsourced weekly/five-sites heading with exactly "Get new odd sites by email." Robot-check line kept. No other 'a week', 'weekly', 'five odd', or 'once a week' copy was in the shipped HTML or JS (meta, alt, and signup.js thanks text had none). Nothing else changed. Form not submitted. build.mjs hook left intact.
 
 Live SHA, grep, fold prose, visual-qa-gate, and shots: see the next entry after Pages builds.
+
+## 2026-11-28 ~2:02 PM CT: Shears heading + first-screen follow-up (QUALITY-BAR v1.5)
+
+Heading replace landed in 68d6ad9: `#signup-title` is exactly "Get new odd sites by email." Robot-check line kept. No other 'a week' or 'five odd' copy was in the shipped HTML or JS.
+
+Follow-up (Dash A / QUALITY-BAR v1.5, cut file update 2:03 PM CT): moved "Submit your odd site" out of the 390 first screen, to just below the first card (more findable than the footer). The 390 first screen now holds the header chrome, h1, lede, signup heading, form (field, button, robot line), and a crop of the Enfilade hero. Local measure: fold prose 20/20; submit link top 1123 at 390 and 1052 at 1280 (both below the fold); hero a.hero 0.502 at 390 / 0.519 at 1280 (was 0.436 / 0.449). Cards unchanged. Form not submitted. build.mjs hook left intact.
+
+Live SHA, grep, visual-qa-gate, and shots: see the next entry after Pages builds.

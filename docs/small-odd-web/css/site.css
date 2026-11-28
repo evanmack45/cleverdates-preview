@@ -222,6 +222,9 @@ h1 {
   font-size: 0.95rem;
 }
 .submit-site:hover { color: #ffd0b8; }
+article.lead + .submit-site {
+  margin: 8px 16px 16px;
+}
 .signup h2 {
   margin: 0 0 14px;
   font: 700 1.35rem/1.25 Fraunces, "Fraunces fallback", Georgia, serif;
@@ -272,4 +275,5 @@ h1 {
 
 @media (min-width: 900px) {
   .signup { margin: 4px 32px 24px; padding-top: 0; }
+  article.lead + .submit-site { margin: 8px 32px 16px; }
 }
