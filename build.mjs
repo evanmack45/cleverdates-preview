@@ -232,7 +232,7 @@ const rbHTML = `<!doctype html>
 const MC = SITE + 'most-common-birthday/';
 const c1 = common[0], c2 = common[1], c3 = common[2];
 const upPct = Math.round((c1.avg / meta.avgDay - 1) * 100);
-const mcAnswer = `${dn(c1)} is the most common birthday in the US, no. ${c1.rank} of 366. It averages ${num(c1.avg)} births a day, ${upPct}% above the ${num(meta.avgDay)} of an average date. ${dn(c2)} and ${dn(c3)} come next.`;
+const mcAnswer = `${dn(c1)} is the most common birthday in the US, no. ${c1.rank} of 366. It averages ${num(c1.avg)} births a day, ${upPct}% above the ${num(meta.avgDay)} average. ${dn(c2)} and ${dn(c3)} come next.`;
 if (mcAnswer.split(/\s+/).length > 60) throw new Error('mc first answer over 60 words');
 if (c1.rank !== 1 || c1.m !== 9 || c1.d !== 12) throw new Error('most-common page claim does not match data');
 const sepInTen = common.slice(0, 10).filter((x) => x.m === 9).length;
