@@ -81,7 +81,7 @@ const html = `<!doctype html>
   <h2 id="next-h">What happens next</h2>
   <ol>
    <li>Your mail app opens with the message filled in. You check it and press send.</li>
-   <li>A person reads each submission, then decides what to feature. Nothing is featured automatically.</li>
+   <li>We read each submission, then decide what to feature.</li>
    <li>Sending a site does not mean it will be featured. We cannot promise a reply.</li>
    <li>We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content.</li>
   </ol>
