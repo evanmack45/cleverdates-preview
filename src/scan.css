@@ -6,8 +6,8 @@
 .foot .lockup { margin: 0 auto 6px; }
 
 .scan .hero-art img { height: 96px; object-position: 60% 40%; }
-.scan .hero-art { margin-bottom: 12px; }
-.scan h1 { font-size: clamp(36px, 9.6vw, 72px); max-width: 12ch; margin-bottom: 14px; }
+.scan .hero-art { margin-bottom: 6px; }
+.scan h1 { font-size: clamp(36px, 9.6vw, 72px); max-width: 12ch; margin-bottom: 2px; }
 
 .mpick { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
 .mo { min-height: 48px; padding: 0; border-radius: 12px; background: transparent; color: var(--cream); box-shadow: inset 0 0 0 2px var(--cream2); font: 700 16px/1 var(--sans); }
@@ -80,3 +80,10 @@ html:not(.js) .sbar, html:not(.js) .mpick, html:not(.js) .dpick, html:not(.js) .
 @media (min-width: 900px) { .scan .hero.locked h1 { font-size: 44px; } }
 
 #vsform { scroll-margin-top: 16px; }
+
+/* Phone: sticky rank bar covers the last slice of the viewport. Pad the scan page by the bar's height
+   so the typed-date row can sit clear of it (Dash 11/27). --sbar-h is set from #sbar's box. */
+@media (max-width: 899px) {
+  .scan { padding-bottom: var(--sbar-h, 85px); }
+  .scan ~ .foot { padding-bottom: var(--sbar-h, 85px); }
+}

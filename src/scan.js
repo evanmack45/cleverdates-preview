@@ -59,4 +59,14 @@
   if (location.hash === '#data') openData();
   // Bar Share = the card's own Save card image (share sheet on phones, download elsewhere).
   $('#sb-share').addEventListener('click', () => $('#save').click());
+
+  // Phone sticky bar height -> padding so the typed-date row can clear it.
+  const setSbarPad = () => {
+    const bar = $('#sbar');
+    const on = bar && getComputedStyle(bar).display !== 'none';
+    document.documentElement.style.setProperty('--sbar-h', on ? Math.ceil(bar.getBoundingClientRect().height) + 'px' : '0px');
+  };
+  setSbarPad();
+  addEventListener('resize', setSbarPad);
+
 })();

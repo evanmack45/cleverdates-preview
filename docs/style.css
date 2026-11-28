@@ -27,7 +27,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 1180px; margin: 0 auto; padding: 14px 20px; }
 .mark { font: 400 22px/1 var(--serif); text-decoration: none; padding: 6px 0; }
-.bar nav a { font-size: 16px; padding: 10px 0; }
+.bar nav a { font-size: 16px; padding: 10px 0; min-height: 48px; display: inline-flex; align-items: center; }
 
 .hero { max-width: 1180px; margin: 0 auto; padding: 6px 20px 40px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; grid-template-areas: "ask" "card" "share" "vs"; }
 .ask { grid-area: ask; display: flex; flex-direction: column; }
@@ -180,7 +180,7 @@ html:not(.js) .vs { display: none; }
 .rb-list .v { font-size: 14px; color: var(--ink2); text-align: right; }
 .rb-list .me { background: #ecdfc4; border-radius: 0 0 18px 18px; }
 .rb-note { margin: 0 0 18px; color: var(--cream2); max-width: 34em; }
-.rb-go { display: inline-block; font: 700 17px/1 var(--sans); color: var(--ink); background: var(--coral); border-radius: 12px; padding: 14px 18px; text-decoration: none; }
+.rb-go { display: inline-block; font: 700 17px/1 var(--sans); color: var(--ink); background: var(--coral); border-radius: 12px; padding: 14px 18px; min-height: 48px; text-decoration: none; }
 .rb-go:hover { background: #ff9274; }
 @media (min-width: 900px) { .rb { padding: 16px 32px 48px; } .rb .hero-art { margin: 0 0 24px; } .rb .hero-art img { height: auto; aspect-ratio: 1400 / 547; border-radius: 18px; } }
 
