@@ -60,7 +60,7 @@ const listItem = (x, i) => `<li><span class="n">${i + 1}</span><a href="#d=${Str
 
 const attribution = `Birth data: <a href="${SOURCE}" rel="noopener">FiveThirtyEight, U.S. Births</a>, from the Social Security Administration, ${meta.years}. <a href="${LICENSE}" rel="noopener">CC BY 4.0</a>. Changed: averaged by month and day, then ranked.`;
 
-const LD = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Clever Dates', url: SITE, description: 'Type a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.', applicationCategory: 'EntertainmentApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
+const LD = { '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Clever Dates', url: SITE, description: 'Tap a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.', applicationCategory: 'EntertainmentApplication', operatingSystem: 'Any', browserRequirements: 'Requires JavaScript', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } };
 const ldTag = `<script type="application/ld+json">${JSON.stringify(LD).replace(/</g, '\\u003c')}</script>`;
 
 const html = `<!doctype html>
@@ -71,7 +71,7 @@ const html = `<!doctype html>
 <link rel="canonical" href="${SITE}">
 <meta property="og:url" content="${SITE}">
 <title>How rare is your birthday? | Clever Dates</title>
-<meta name="description" content="Type a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.">
+<meta name="description" content="Tap a month and day. See how common that birthday is in the US, out of 366, and where it first shows up in pi.">
 <meta property="og:title" content="How rare is your birthday?">
 <meta property="og:description" content="Your birthday's rank out of 366, and where it hides in pi.">
 <meta property="og:image" content="${SITE}og.jpg">
@@ -317,14 +317,13 @@ const mcHTML = `<!doctype html>
 </body>
 </html>`;
 
-// ---- /scan-preview/: scan-first home candidate (Dash 11/27). noindex, canonical to the home, not in the sitemap, nothing links to it. ----
-// Same ids as the home, so app.js runs unchanged (a copy that shares the home URL and loads ../art/). scan.js adds the pickers and the bar.
+// ---- The home is the scan-first layout (Shears PASS 12:41 PM CT, promoted 11/27 per Dash). Same ids as before, so app.js runs unchanged; scan.js adds the pickers and the bar. /scan-preview/ is a hash-preserving redirect to /. ----
 const MON3 = MONTHS.map((m) => m.slice(0, 3));
 const LOCKUP = (href) => `<a class="lockup" href="${href}" aria-label="Clever Dates home"><svg class="lk-mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="2" y="5" width="36" height="33" rx="8" fill="#f4eedf"/><rect x="2" y="5" width="36" height="10" rx="8" fill="#ff7a59"/><rect x="2" y="11" width="36" height="4" fill="#ff7a59"/><rect x="11" y="2" width="4" height="8" rx="2" fill="#0f3b2c"/><rect x="25" y="2" width="4" height="8" rx="2" fill="#0f3b2c"/>${[0, 1, 2].map((r) => [0, 1, 2, 3].map((c) => `<rect x="${7 + c * 7.2}" y="${19 + r * 6}" width="4.6" height="4" rx="1" fill="${r === 2 && c === 2 ? '#ff7a59' : '#0f3b2c'}"${r === 2 && c === 2 ? '' : ' opacity=".8"'}/>`).join('')).join('')}</svg><span class="lk-word">Clever Dates</span></a>`;
 const monthBtns = MON3.map((m, i) => `<button type="button" class="mo" data-m="${i + 1}" aria-pressed="${i + 1 === EX.m}">${m}</button>`).join('');
 const dayBtns = Array.from({ length: 31 }, (_, i) => { const x = byKey(EX.m, i + 1); return `<button type="button" class="dy${x ? ` s${shade(x.rank)}` : ''}" data-d="${i + 1}" aria-pressed="${i + 1 === EX.d}"${x ? ` aria-label="${MONTHS[EX.m - 1]} ${i + 1}, no. ${x.rank} of 366"` : ' disabled'}>${i + 1}</button>`; }).join('');
 const scanAsk = ` <div class="ask">
-  <figure class="hero-art"><img src="../art/candles-800.webp" srcset="../art/candles-800.webp 800w, ../art/candles-1400.webp 1400w" sizes="(min-width: 900px) 600px, 100vw" width="1400" height="547" fetchpriority="high" alt="Risograph print: a field of tiny unlit teal birthday candles with four glowing pink lit ones, one much brighter than the rest."></figure>
+  <figure class="hero-art"><img src="art/candles-800.webp" srcset="art/candles-800.webp 800w, art/candles-1400.webp 1400w" sizes="(min-width: 900px) 600px, 100vw" width="1400" height="547" fetchpriority="high" alt="Risograph print: a field of tiny unlit teal birthday candles with four glowing pink lit ones, one much brighter than the rest."></figure>
   <h1 id="h1">How rare is your birthday?</h1>
   <div class="toy" id="toy">
   <div class="mpick" id="mpick" role="group" aria-label="Month">${monthBtns}</div>
@@ -338,48 +337,55 @@ const scanAsk = ` <div class="ask">
   </form>
  </div>`;
 const sbar = `<div class="sbar" id="sbar" role="region" aria-label="Your birthday's rank"><p class="sb-l"><span class="sb-d" id="sb-d">${MONTHS[EX.m - 1]} ${EX.d}</span><span class="sb-r"><span class="sb-no">No.</span><b id="sb-r">${EX.rank}</b><span class="sb-of">of 366</span></span></p><div class="sb-acts"><button type="button" id="sb-share" class="sb-share">Share</button><a class="sb-more" href="#card">See card</a></div></div>`;
-const rel = (h) => h.replace(/(["\s,])art\//g, '$1../art/').replace(/(["(])fonts\//g, '$1../fonts/').replace(/href="(most-common-birthday|rarest-birthday)\/"/g, 'href="../$1/"').replace('href="style.css"', 'href="../style.css"');
 const swap = (h, a, b) => { if (h.split(a).length !== 2) throw new Error(`scan-preview: anchor not found once: ${a.slice(0, 60)}`); return h.replace(a, () => b); };
-let scanHTML = rel(html);
-scanHTML = swap(scanHTML, '<link rel="canonical"', '<meta name="robots" content="noindex">\n<link rel="canonical"');
-scanHTML = swap(scanHTML, '<link rel="stylesheet" href="../style.css">', '<link rel="stylesheet" href="../style.css">\n<link rel="stylesheet" href="scan.css">');
-scanHTML = swap(scanHTML, '<header class="bar"><a class="mark" href="./">Clever Dates</a><nav aria-label="Page"><a href="#data">About the data</a></nav></header>', `<header class="bar">${LOCKUP('../')}<nav aria-label="Page"><a href="#data">Sources</a></nav></header>`);
+let scanHTML = html;
+scanHTML = swap(scanHTML, '<link rel="stylesheet" href="style.css">', '<link rel="stylesheet" href="style.css">\n<link rel="stylesheet" href="scan.css">');
+scanHTML = swap(scanHTML, '<header class="bar"><a class="mark" href="./">Clever Dates</a><nav aria-label="Page"><a href="#data">About the data</a></nav></header>', `<header class="bar">${LOCKUP('./')}<nav aria-label="Page"><a href="#data">Sources</a></nav></header>`);
 scanHTML = swap(scanHTML, scanHTML.slice(scanHTML.indexOf(' <div class="ask">'), scanHTML.indexOf(' <article class="card"')), scanAsk + '\n');
-scanHTML = swap(scanHTML, '<p class="vs-dek" id="vs-dek">', '<img class="vs-art" src="../art/crowd-480.webp" width="1024" height="1024" alt="" loading="lazy" decoding="async"><p class="vs-dek" id="vs-dek">');
+scanHTML = swap(scanHTML, '<p class="vs-dek" id="vs-dek">', '<img class="vs-art" src="art/crowd-480.webp" width="1024" height="1024" alt="" loading="lazy" decoding="async"><p class="vs-dek" id="vs-dek">');
 scanHTML = swap(scanHTML, '<p class="map-dek">Darker squares are more common. Brighter squares are rarer. Tap one.</p>', '');
 scanHTML = swap(scanHTML, '<summary><span id="b-h">Show my billion-second day and calendar twins</span></summary>', '<summary><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg><span id="b-h">Billion-second day and calendar twins</span></summary>');
 { const a = scanHTML.indexOf('<section class="data" id="data"'), b = scanHTML.indexOf('</section>', a) + '</section>'.length; const inner = scanHTML.slice(a, b).replace(/<h2 id="data-h">About the data<\/h2>/, '<details><summary><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg><span id="data-h">About the data and sources</span></summary>').replace(/<\/section>$/, '</details></section>'); scanHTML = scanHTML.slice(0, a) + inner + scanHTML.slice(b); }
 scanHTML = swap(scanHTML, '<main>', '<main class="scan">');
 scanHTML = swap(scanHTML, '</main>\n<footer', `</main>\n${sbar}\n<footer`);
-scanHTML = swap(scanHTML, '<footer class="foot"><p class="foot-pages">', `<footer class="foot">${LOCKUP('../')}<p class="foot-pages">`);
+scanHTML = swap(scanHTML, '<footer class="foot"><p class="foot-pages">', `<footer class="foot">${LOCKUP('./')}<p class="foot-pages">`);
 scanHTML = swap(scanHTML, '<script src="app.js" defer></script>', '<script src="app.js" defer></script>\n<script src="scan.js" defer></script>');
 if (/scan-preview/.test(html)) throw new Error('home must not link the preview');
-const scanApp = readFileSync(join(here, 'src/app.js'), 'utf8')
-  .replace(/const publicPage = \(\) => .*\n/, () => { return "const publicPage = () => CANONICAL; // preview copy: shares and links always go to the home\n"; })
-  .replace(/loadImg\('art\//g, "loadImg('../art/");
-if (!scanApp.includes('const publicPage = () => CANONICAL;') || /loadImg\('art\//.test(scanApp)) throw new Error('scan-preview app.js patch failed');
-
 rmSync(out, { recursive: true, force: true });
 mkdirSync(join(out, 'fonts'), { recursive: true });
 mkdirSync(join(out, 'data'), { recursive: true });
-writeFileSync(join(out, 'index.html'), html);
+writeFileSync(join(out, 'index.html'), scanHTML);
 mkdirSync(join(out, 'rarest-birthday'), { recursive: true });
 writeFileSync(join(out, 'rarest-birthday/index.html'), rbHTML);
 mkdirSync(join(out, 'most-common-birthday'), { recursive: true });
 writeFileSync(join(out, 'most-common-birthday/index.html'), mcHTML);
 writeFileSync(join(out, 'mc.js'), mcJS);
+// /scan-preview/ (the old candidate URL): noindex redirect to the home that keeps the query and the hash, so #d=10-07 style links still land.
 mkdirSync(join(out, 'scan-preview'), { recursive: true });
-writeFileSync(join(out, 'scan-preview/index.html'), scanHTML);
-writeFileSync(join(out, 'scan-preview/app.js'), scanApp);
-for (const f of ['scan.js', 'scan.css']) copyFileSync(join(here, 'src', f), join(out, 'scan-preview', f));
-for (const f of ['style.css', 'app.js', 'og.jpg']) { copyFileSync(join(here, 'src', f), join(out, f)); }
+writeFileSync(join(out, 'scan-preview/index.html'), `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="${SITE}">
+<title>Moved: Clever Dates</title>
+<script>location.replace('../' + location.search + location.hash)</script>
+<meta http-equiv="refresh" content="0; url=../">
+</head>
+<body>
+<p>This page moved to <a href="../">cleverdates.com</a>.</p>
+</body>
+</html>
+`);
+for (const f of ['style.css', 'app.js', 'scan.js', 'scan.css', 'og.jpg']) { copyFileSync(join(here, 'src', f), join(out, f)); }
 mkdirSync(join(out, 'art'), { recursive: true });
 for (const f of readdirSync(join(here, 'src/art'))) copyFileSync(join(here, 'src/art', f), join(out, 'art', f));
 for (const f of readdirSync(join(here, 'src/fonts'))) copyFileSync(join(here, 'src/fonts', f), join(out, 'fonts', f));
 copyFileSync(join(here, 'data/dates.json'), join(out, 'data/dates.json'));
 copyFileSync(join(here, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'), join(out, 'data/LICENSE-fivethirtyeight-CC-BY-4.0.txt'));
 writeFileSync(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
-writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc></url><url><loc>${RB}</loc></url><url><loc>${MC}</loc></url></urlset>\n`);
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${SITE}</loc><lastmod>2026-11-27</lastmod></url><url><loc>${RB}</loc></url><url><loc>${MC}</loc></url></urlset>\n`);
 writeFileSync(join(out, 'CNAME'), 'cleverdates.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);

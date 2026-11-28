@@ -27,7 +27,10 @@
   $('#mpick').addEventListener('click', (e) => { const b = e.target.closest('.mo'); if (!b) return; m = Number(b.dataset.m); d = Math.min(d, DIM[m - 1]); paint(); pick(); });
   $('#dpick').addEventListener('click', (e) => { const b = e.target.closest('.dy'); if (!b || b.disabled) return; d = Number(b.dataset.d); paint(); pick();
     // Challenge: the comparison sits under the pickers; bring it up once the friend taps a day (not on a month tap).
-    if (document.querySelector('.hero.locked') && !$('#vs-out').hidden) $('#vs-out').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    if (document.querySelector('.hero.locked') && !$('#vs-out').hidden) {
+      const phone = getComputedStyle($('#sbar')).display !== 'none'; // phone: put the typable box and its hint at the top, above the result, clear of the rank bar
+      (phone ? $('#vsform') : $('#vs-out')).scrollIntoView({ block: phone ? 'start' : 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
   });
   // Mirror whatever app.js shows (typed date, grid tap, list link, hash) into the buttons and the bar.
   const sync = () => {
