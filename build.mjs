@@ -171,6 +171,7 @@ ${ldTag}
 <footer class="foot"><p class="foot-pages"><a href="most-common-birthday/">Most common</a><a href="rarest-birthday/">Rarest</a></p><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
 <script type="application/json" id="dates">${JSON.stringify({ meta, dates }).replace(/</g, '\\u003c')}</script>
 <script src="app.js" defer></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f788a69f59cc40698cc64976c49668ac"}'></script>
 </body>
 </html>`;
 
@@ -223,6 +224,7 @@ const rbHTML = `<!doctype html>
  <p class="attr">${attribution}</p>
 </main>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f788a69f59cc40698cc64976c49668ac"}'></script>
 </body>
 </html>`;
 
@@ -314,6 +316,7 @@ const mcHTML = `<!doctype html>
 <footer class="foot"><p><a href="${AFTERNIC}" rel="noopener">This domain is for sale.</a></p></footer>
 <script type="application/json" id="dates">${JSON.stringify({ meta, dates: [c1] }).replace(/</g, '\\u003c')}</script>
 <script src="../mc.js" defer></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f788a69f59cc40698cc64976c49668ac"}'></script>
 </body>
 </html>`;
 
