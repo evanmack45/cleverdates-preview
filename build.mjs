@@ -395,3 +395,6 @@ console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);
 
 // Small Odd Web "submit your odd site" preview (noindex, unlinked): docs/odd-preview/. Dash order 11/28 12:25 PM CT, BOARD line 91.
 await import('./odd/build-odd.mjs');
+
+// Small Odd Web gallery (Dash go-live 11/28 1:37 PM CT): docs/small-odd-web/. noindex to match /odd-preview/; not in sitemap.
+await import('./small-odd-web/build-sow.mjs');
