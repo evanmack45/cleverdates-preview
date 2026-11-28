@@ -27,10 +27,26 @@ const parse = (href) => { const m = href.match(/^mailto:([^?]+)\?subject=([^&]*)
     ok(/form-action 'none'/.test(meta.csp) && /connect-src 'none'/.test(meta.csp), 'CSP blocks form posts and network connections');
     ok((await p.evaluate(() => document.querySelectorAll('form[action], form[method=post]').length)) === 0, 'form has no action and does not post');
     ok(await p.evaluate(() => document.body.innerText.includes('human review') && document.body.innerText.includes('Nothing is featured automatically')), 'human-review note is on the page');
+    ok(await p.evaluate(() => /We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content/.test(document.body.innerText)), 'deeper-pages and slurs/explicit-content line is under What happens next');
     ok(await p.evaluate(() => !/within \d|hours|days|odds|chance of|guarantee/i.test(document.body.innerText)), 'no reply time, odds or guarantee promised');
     ok(await p.evaluate(() => document.getElementById('f-why').maxLength === 140 && document.getElementById('f-url').required && !document.getElementById('f-handle').required), 'why has maxlength 140; URL required; handle optional');
     ok(!(await vis(p, 'fallback')), 'fallback is hidden until the first submit');
     await p.close(); }
+
+  // The "What happens next" block, including the deeper-pages line, stays below the fold at 390 and 1280.
+  for (const [w, h, mob] of [[390, 844, true], [1280, 800, false]]) {
+    const ctx = await b.newContext({ viewport: { width: w, height: h }, isMobile: mob, hasTouch: mob });
+    const p = await ctx.newPage();
+    await p.goto(base, { waitUntil: 'networkidle' }); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(200);
+    const pos = await p.evaluate(() => {
+      const h2 = document.getElementById('next-h');
+      const li = [...document.querySelectorAll('.more ol li')].find((e) => /deeper pages/.test(e.textContent));
+      return { h2: h2 ? Math.round(h2.getBoundingClientRect().top) : null, li: li ? Math.round(li.getBoundingClientRect().top) : null, vh: innerHeight };
+    });
+    ok(pos.h2 != null && pos.h2 >= pos.vh, `"What happens next" is below the ${w} fold (top ${pos.h2}, vh ${pos.vh})`);
+    ok(pos.li != null && pos.li >= pos.vh, `deeper-pages line is below the ${w} fold (top ${pos.li}, vh ${pos.vh})`);
+    await ctx.close();
+  }
 
   // Input 1: a bad URL. Each bad value is refused, shows an error, opens no mail app.
   { const p = await page(); let allBad = true; const seen = [];

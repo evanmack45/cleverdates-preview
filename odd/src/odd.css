@@ -78,7 +78,7 @@ input[aria-invalid=true], textarea[aria-invalid=true] { border-color: var(--err)
 .btn.primary:hover { background: var(--coral2); color: var(--bg); }
 .status { margin: 0; min-height: 1.4em; color: var(--coral2); font-weight: 700; }
 
-.more { max-width: 1100px; margin: 0 auto; padding: 36px 16px 8px; display: grid; gap: 28px; }
+.more { max-width: 1100px; margin: 0 auto; padding: 84px 16px 8px; display: grid; gap: 28px; }
 .more h2 { margin: 0 0 10px; font: 700 1.5rem/1.15 var(--serif); }
 .more ol, .more ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; color: var(--soft); max-width: 38rem; }
 .more p { margin: 0 0 8px; color: var(--soft); max-width: 38rem; }

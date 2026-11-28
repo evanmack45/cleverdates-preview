@@ -83,6 +83,7 @@ const html = `<!doctype html>
    <li>Your mail app opens with the message filled in. You check it and press send.</li>
    <li>A person reads each submission, then decides what to feature. Nothing is featured automatically.</li>
    <li>Sending a site does not mean it will be featured. We cannot promise a reply.</li>
+   <li>We check each site's deeper pages before featuring it, and skip anything with slurs or explicit content.</li>
   </ol>
  </section>
  <section aria-labelledby="pr-h">
