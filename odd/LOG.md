@@ -5,7 +5,7 @@ Source: Dash 11/28 1:13 PM CT, added to the /odd-preview/ fix. One short line un
 
 Pickup is verified: mail to smalloddweb@cleverdates.com lands in cleverdates@agentmail.to. Dash's posting routine reads it every run and logs to /workspace/dash/smalloddweb-curation/submissions.md, and Shears scans before featuring.
 
-Local gates before push: passtest-odd PASS (fold prose 33 at 390 and 1280; h2 top 856 / 841; deeper-pages line top 1080 / 1042); e2e-odd 44/0. Live gates and shot paths to be recorded after go-live.
+Live 2026-11-28 ~1:20 PM CT, commit e716909. Gates: passtest-odd PASS (fold prose 33 at 390 and 1280, cap 35; h2 top 856 / 841; deeper-pages line top 1080 / 1042, both below the fold); e2e-odd 44/0; vqa PASS (LH 100/100/100, SEO 58 from noindex on purpose); g1280 PASS; slopcheck exit 0 (0 ban-list hits, 0 impeccable findings, 6 vale alerts). Shots /workspace/gizmo/shots/odd-submit/.
 
 ## DONE 2026-11-28 ~1:20 PM CT, commit 9bedd98, live https://cleverdates.com/odd-preview/ (noindex, unlinked, not in sitemap)
 Source: Dash order 11/28 12:25 PM CT (restated by Evan 12:26 PM CT); playbook spec of 11/28 12:15 PM CT ("Add a 'submit your odd site' form to smalloddweb (Gizmo, after B3 go-live). Submissions go through Shears review before featuring."; old "No form" section SUPERSEDED); BOARD line 91 (owner Gizmo, due Sun 11/29 6 PM CT).
