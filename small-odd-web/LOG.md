@@ -25,3 +25,13 @@ https://cleverdates.com/small-odd-web/ returns 200 over HTTPS. Pages build d95ab
 Live measure (same method as gate-1128-sow2.js): fold prose 21/21 at 390 and 1280. Main taps 48px, 0 fails. Hero visible-box ratio 0.436 at 390, 0.449 at 1280.
 
 visual-qa-gate (URL positional) PASS, no P0. Lighthouse mobile: performance 91, accessibility 100, best-practices 100, seo 69. LCP 1.2s, CLS 0.176 (P1, budget 0.1), TBT 100ms. SEO is pulled down by noindex, matching /odd-preview/. Gate out: /workspace/mason/sow-golive-live-2026-11-28/gate. Own 390/1280 fold and full shots: /workspace/mason/sow-golive-live-2026-11-28/. Kit form was not submitted.
+
+## 2026-11-28 ~1:55 PM CT: CLS fix (Dash 1:50 PM CT)
+
+Source of the 0.176 shift, from Lighthouse `layout-shifts` / `cls-culprits-insight` and a PerformanceObserver trace: not the Kit form and not unsized images (unsized-images score 1). Almost all of the 0.176 was `img.hero-shot` moving when `fraunces-700.woff2` and `atkinson-400.woff2` swapped in (`font-display: swap`). On a 412px Lighthouse viewport the fallback text was wide enough that "Get the list" wrapped under the email field, then jumped up beside it once Atkinson loaded, which shoved the hero up ~58px (y 476 → 418). A 0.0002 leftover was `@smalloddweb` changing width.
+
+Fix: metric-matched fallback `@font-face` faces (`size-adjust` / `ascent-override` / `descent-override`), same pattern as C2's Gloock/Schibsted fallbacks, plus preload of Fraunces 700 and Atkinson 400/700. Form-first layout, copy, robot line, and guard redirect unchanged. Form not submitted. build.mjs hook left intact.
+
+Local check with fonts delayed 800ms: vertical positions of the form and hero match the loaded-font layout; CLS 0.001 (tiny residual button/toplink width). Fold prose still 21/21, taps 48px, hero 0.436 / 0.449.
+
+Live Lighthouse median and shots: see the next entry after Pages builds.

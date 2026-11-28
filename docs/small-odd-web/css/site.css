@@ -27,6 +27,37 @@
   src: url("../fonts/atkinson-700.woff2") format("woff2");
 }
 
+
+/* Metric-matched fallbacks so font-display: swap does not shove the hero.
+   Lighthouse CLS 0.176 was the hero image moving when Fraunces 700 and
+   Atkinson 400 swapped in (layout-shifts / cls-culprits-insight). */
+@font-face {
+  font-family: "Fraunces fallback";
+  src: local("Georgia"), local("Liberation Serif"), local("Times New Roman"), local("Times");
+  size-adjust: 110.39%;
+  ascent-override: 67.9%;
+  descent-override: 21.7%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Atkinson fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  font-weight: 400;
+  size-adjust: 95.79%;
+  ascent-override: 76.2%;
+  descent-override: 19.8%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Atkinson fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  font-weight: 700;
+  size-adjust: 97.11%;
+  ascent-override: 78.3%;
+  descent-override: 20.6%;
+  line-gap-override: 0%;
+}
+
 * { box-sizing: border-box; }
 html { background: #16141c; overflow-x: hidden; }
 body {
@@ -34,7 +65,7 @@ body {
   min-height: 100vh;
   background: #16141c;
   color: #f2efe8;
-  font: 16px/1.45 "Atkinson Hyperlegible", system-ui, sans-serif;
+  font: 16px/1.45 "Atkinson Hyperlegible", "Atkinson fallback", system-ui, sans-serif;
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: #ff8a5b; }
@@ -73,14 +104,14 @@ a:hover { color: #ffd0b8; }
   text-decoration: none;
   font-weight: 700;
 }
-.brand { font-family: Fraunces, Georgia, serif; font-size: 1.05rem; }
+.brand { font-family: Fraunces, "Fraunces fallback", Georgia, serif; font-size: 1.05rem; }
 .mark { display: block; width: 32px; height: 32px; flex: none; color: #ff6a3d; }
 .toplink { font-size: 1rem; }
 
 .intro { padding: 16px 16px 8px; }
 h1 {
   margin: 0 0 8px;
-  font: 700 2.15rem/1.1 Fraunces, Georgia, serif;
+  font: 700 2.15rem/1.1 Fraunces, "Fraunces fallback", Georgia, serif;
   letter-spacing: -0.02em;
 }
 .lede { margin: 0; font-size: 1.05rem; color: #d5d0c6; max-width: 28rem; }
@@ -119,7 +150,7 @@ h1 {
   border-radius: 999px;
   background: #ff6a3d;
   color: #16141c;
-  font: 700 1rem/1 "Atkinson Hyperlegible", system-ui, sans-serif;
+  font: 700 1rem/1 "Atkinson Hyperlegible", "Atkinson fallback", system-ui, sans-serif;
   text-decoration: none;
 }
 .go:hover { background: #ff8a5b; color: #16141c; border-color: #ff8a5b; }
@@ -193,7 +224,7 @@ h1 {
 .submit-site:hover { color: #ffd0b8; }
 .signup h2 {
   margin: 0 0 14px;
-  font: 700 1.35rem/1.25 Fraunces, Georgia, serif;
+  font: 700 1.35rem/1.25 Fraunces, "Fraunces fallback", Georgia, serif;
 }
 .signup label {
   display: flex;
@@ -216,7 +247,7 @@ h1 {
   border-radius: 8px;
   background: #221f29;
   color: #f2efe8;
-  font: 16px/1.3 "Atkinson Hyperlegible", system-ui, sans-serif;
+  font: 16px/1.3 "Atkinson Hyperlegible", "Atkinson fallback", system-ui, sans-serif;
 }
 .signup input[type="email"]:disabled,
 .signup button:disabled {
