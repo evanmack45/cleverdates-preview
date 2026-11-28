@@ -41,3 +41,9 @@ Live Lighthouse median and shots: see the next entry after Pages builds.
 https://cleverdates.com/small-odd-web/ is serving the fallback CSS and font preloads. Lighthouse mobile, three runs with the same flags as visual-qa-gate: CLS 0, 0, 0; median 0 (was 0.176). Performance 100 / a11y 100 / best-practices 100 / seo 69 (noindex) on all three; LCP 1.2s. JSON: /workspace/mason/sow-golive-live-2026-11-28/lh-clsfix-{1,2,3}.json.
 
 visual-qa-gate (URL positional) PASS, no P0, and its own Lighthouse mobile also CLS 0, performance 100, LCP 1.2s, TBT 0ms. Out: /workspace/mason/sow-golive-live-2026-11-28/gate-clsfix. Live fold prose 21/21, taps 48px, hero 0.436 / 0.449. Shots (viewed): /workspace/mason/sow-golive-live-2026-11-28/phone-390-fold-clsfix@2x.png and desktop-1280-fold-clsfix@2x.png. Form not submitted.
+
+## 2026-11-28 ~2:00 PM CT: Shears heading cut (BLOCK at cc29eec)
+
+Source: /workspace/shears/cuts/cleverdates.com-small-odd-web-2026-11-28.md. Replaced the unsourced weekly/five-sites heading with exactly "Get new odd sites by email." Robot-check line kept. No other 'a week', 'weekly', 'five odd', or 'once a week' copy was in the shipped HTML or JS (meta, alt, and signup.js thanks text had none). Nothing else changed. Form not submitted. build.mjs hook left intact.
+
+Live SHA, grep, fold prose, visual-qa-gate, and shots: see the next entry after Pages builds.
