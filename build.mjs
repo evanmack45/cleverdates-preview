@@ -392,3 +392,6 @@ writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\
 writeFileSync(join(out, 'CNAME'), 'cleverdates.com\n');
 writeFileSync(join(out, '.nojekyll'), '');
 console.log(`built ${out}: 366 dates, example ${EX.m}/${EX.d} rank ${EX.rank}`);
+
+// Small Odd Web "submit your odd site" preview (noindex, unlinked): docs/odd-preview/. Dash order 11/28 12:25 PM CT, BOARD line 91.
+await import('./odd/build-odd.mjs');
